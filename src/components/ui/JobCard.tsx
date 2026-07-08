@@ -14,7 +14,7 @@ const JobCard = ({ job }: any) => {
 
           <img
             src={job.logo}
-            className="h-14 w-14 rounded-xl object-cover"
+            className="h-14 w-14 rounded-xl object-contain"
           />
 
           <div>
@@ -29,7 +29,7 @@ const JobCard = ({ job }: any) => {
 
         </div>
 
-        <button className="rounded-full bg-blue-50 px-4 py-2 text-sm text-blue-600">
+        <button className="rounded-full bg-blue-50 px-4 py-2 text-[12px] text-blue-600">
           {job.salary}
         </button>
 
