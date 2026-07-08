@@ -11,6 +11,7 @@ import {
     faEnvelope,
     faBuilding,
     faMagnifyingGlass,
+    faShieldHalved,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -24,5 +25,6 @@ library.add(
     faSuitcase,
     faEnvelope,
     faBuilding,
-    faMagnifyingGlass
+    faMagnifyingGlass,
+    faShieldHalved
 );

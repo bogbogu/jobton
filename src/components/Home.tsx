@@ -5,18 +5,22 @@ import Hero from './home/Hero'
 import HowItWorks from './home/HowItWorks'
 import Metrics from './home/Metrics'
 import Features from './home/Features'
+import FeaturedJobs from './home/FeaturedJobs'
+import PopularCategories from './home/PopularCategories'
 
 const Home = () => {
     return (
-    <>
-    {/* <Navbar /> */}
-    <Hero />
-    <Features />
-    <Metrics />
-    <HowItWorks />
-    <Footer />
+        <>
+            {/* <Navbar /> */}
+            <Hero />
+            <Features />
+            <Metrics />
+            <FeaturedJobs />
+            <PopularCategories />
+            <HowItWorks />
+            <Footer />
 
-    </>
+        </>
     )
 }
 
