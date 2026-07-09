@@ -13,8 +13,10 @@ const jobs = [
     title: "Senior Product Designer",
     location: "Remote",
     type: "Full-time",
-    salary: "$8k - $10k",
-    tags: ["UI/UX", "Figma"],
+    salary: "$8k - $10k / month",
+    status: ["featured", "verified"],
+    skills: ["UI/UX", "Figma"],
+    posted: "2 days ago",
   },
   {
     company: "Meta",
@@ -22,8 +24,10 @@ const jobs = [
     title: "Frontend Engineer",
     location: "Lagos",
     type: "Hybrid",
-    salary: "₦900k",
-    tags: ["React", "TypeScript"],
+    salary: "₦900k / month",
+    status: ["urgent"],
+    skills: ["React", "TypeScript"],
+    posted: "1 day ago",
   },
   {
     company: "Flutterwave",
@@ -31,8 +35,10 @@ const jobs = [
     title: "Backend Engineer",
     location: "Remote",
     type: "Full-time",
-    salary: "₦1.2m",
-    tags: ["Node", "Postgres"],
+    salary: "₦1.2m / month",
+    status: ["verified"],
+    skills: ["Node.js", "Postgres"],
+    posted: "5 hours ago",
   },
   {
     company: "Microsoft",
@@ -40,8 +46,10 @@ const jobs = [
     title: "Cloud Engineer",
     location: "Abuja",
     type: "Remote",
-    salary: "$7k",
-    tags: ["Azure", "DevOps"],
+    salary: "$7k / month",
+    status: ["featured"],
+    skills: ["Azure", "DevOps"],
+    posted: "3 days ago",
   },
 ];
 
@@ -49,28 +57,46 @@ const FeaturedJobs = () => {
   return (
     <section className="py-24 bg-slate-50">
       <div className="container max-w-7xl mx-auto px-6">
-        <div className="mb-14 flex items-end justify-between">
-          <div>
+        <div className="mb-14">
+          <div className="flex items-center justify-between md:hidden">
             <p className="font-medium text-blue-600">Featured Jobs</p>
-
-            <h2 className="mt-2 text-4xl font-bold">
+            <Link
+              to="/"
+              className="group inline-flex items-center gap-2 font-medium text-blue-600"
+            >
+              View all
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="hidden md:flex items-end justify-between">
+            <div>
+              <p className="font-medium text-blue-600">Featured Jobs</p>
+              <p className="mt-2 text-4xl font-bold">
+                Find your next opportunity
+              </p>
+              <p className="mt-4 max-w-xl text-slate-500">
+                Discover verified openings from top employers hiring now.
+              </p>
+            </div>
+            <Link
+              to="/"
+              className="group inline-flex items-center gap-2 font-medium text-blue-600"
+            >
+              View all
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="mt-4 md:hidden">
+            <p className="text-2xl xs:text-3xl sm:text-4xl font-bold">
               Find your next opportunity
-            </h2>
-
-            <p className="mt-4 max-w-xl text-slate-500">
+            </p>
+            <p className="mt-4 text-slate-500">
               Discover verified openings from top employers hiring now.
             </p>
           </div>
-          <Link
-            to="/"
-            className="group inline-flex items-center gap-2 font-medium text-blue-600 transition-colors hover:text-blue-700"
-          >
-            View all
-            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {jobs.map((job) => (
             <JobCard key={job.title} job={job} />
           ))}
