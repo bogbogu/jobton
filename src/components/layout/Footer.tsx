@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NewsletterForm from "../ui/NewsletterForm";
@@ -34,8 +33,9 @@ const Footer = () => {
         <div className="flex flex-wrap justify-center gap-6 md:gap-8 text-sm text-slate-500 font-medium">
           <Link to="/">Home</Link>
           <Link to="/">Features</Link>
-          <Link to="/">My Jobs</Link>
-          <Link to="/">Contact</Link>
+          <Link to="/">Find Jobs</Link>
+          <Link to="/hire-freelancers">Hire Freelancers</Link>
+          <Link to="/contact">Contact</Link>
         </div>
 
         <div className="text-sm text-slate-400 text-center md:text-right">
