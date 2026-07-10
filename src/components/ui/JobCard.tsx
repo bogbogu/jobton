@@ -7,10 +7,10 @@ const statusStyles: Record<string, string> = {
   urgent: "bg-red-100 text-red-700",
 };
 
-const JobCard = ({ job }: any) => {
+const JobCard = ({ job, onClick }: { job: any; onClick?: () => void }) => {
   const [saved, setSaved] = useState(job.saved ?? false);
   return (
-    <div className="rounded-3xl bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <div onClick={onClick} className="rounded-3xl bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
           <img

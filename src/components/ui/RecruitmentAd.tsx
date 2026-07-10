@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 const RecruitmentAd = () => {
@@ -10,21 +9,16 @@ const RecruitmentAd = () => {
                     <h2 className="text-3xl font-bold">
                         Recruiting?
                     </h2>
-
                     <p className="text-gray-600">
                         Discover real online jobs in Nigeria that pay and build steady income
                         from anywhere.
                     </p>
-
                     <Link
                         to="/"
-                        className="self-start rounded-md bg-[#6593FC] px-6 py-3 text-white bg-blue-600- hover:bg-blue-700"
+                        className="self-start rounded-md bg-[#6593FC]- px-6 py-3 text-white bg-blue-600 hover:bg-blue-700"
                     >
                         Check it out
                     </Link>
-                </div>
-
-                <div>
                 </div>
             </div>
         </section>

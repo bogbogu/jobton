@@ -1,4 +1,4 @@
-import PageBanner from "../ui/PageBanner";
+import PageBanner from "../../../components/ui/PageBanner";
 const HireFreelancers = () => {
   return (
     <>

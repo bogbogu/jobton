@@ -1,5 +1,4 @@
-import React from 'react'
-import Home from '../components/Home'
+import Home from '../features/Home/components/Home'
 
 const Homepage = () => {
     return (

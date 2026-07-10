@@ -1,12 +1,10 @@
-import React from 'react'
 import PageBanner from '../components/ui/PageBanner'
-import Jobs from '../components/jobs'
+import Jobs from '../features/Jobs/components/Jobs'
 
 const AllJobs = () => {
     return (
         <>
-            <PageBanner pageTitle='Explore Online Jobs' pageSubTitle='Discover verified online jobs from anywhere.
-            '/>
+            <PageBanner pageTitle='Explore Online Jobs' pageSubTitle='Discover verified online jobs from anywhere.' />
             <Jobs />
         </>
     )

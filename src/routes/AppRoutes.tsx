@@ -3,6 +3,7 @@ import Homepage from "../pages/Homepage";
 import ContactUs from "../pages/ContactUs";
 import MainLayout from "../components/layout/MainLayout";
 import HireFreelancersPage from "../pages/HireFreelancersPage";
+import AllJobs from "../pages/AllJobs";
 
 const AppRoutes = () => {
   return (
@@ -10,6 +11,7 @@ const AppRoutes = () => {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Homepage />} />
+          <Route path="/jobs" element={<AllJobs />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/hire-freelancers" element={<HireFreelancersPage />} />
         </Route>

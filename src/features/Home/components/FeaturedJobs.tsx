@@ -1,65 +1,17 @@
 import { Link } from "react-router-dom";
-import JobCard from "../ui/JobCard";
+import JobCard from "../../../components/ui/JobCard";
 import { ArrowRight } from "lucide-react";
-import googleLogo from "../../assets/images/logos/google.png";
-import metaLogo from "../../assets/images/logos/meta.png";
-import flutterwaveLogo from "../../assets/images/logos/flutterwave.png";
-import microsoftLogo from "../../assets/images/logos/microsoft.png";
-
-const jobs = [
-  {
-    company: "Google",
-    logo: googleLogo,
-    title: "Senior Product Designer",
-    location: "Remote",
-    type: "Full-time",
-    salary: "$8k - $10k / month",
-    status: ["featured", "verified"],
-    skills: ["UI/UX", "Figma"],
-    posted: "2 days ago",
-  },
-  {
-    company: "Meta",
-    logo: metaLogo,
-    title: "Frontend Engineer",
-    location: "Lagos",
-    type: "Hybrid",
-    salary: "₦900k / month",
-    status: ["urgent"],
-    skills: ["React", "TypeScript"],
-    posted: "1 day ago",
-  },
-  {
-    company: "Flutterwave",
-    logo: flutterwaveLogo,
-    title: "Backend Engineer",
-    location: "Remote",
-    type: "Full-time",
-    salary: "₦1.2m / month",
-    status: ["verified"],
-    skills: ["Node.js", "Postgres"],
-    posted: "5 hours ago",
-  },
-  {
-    company: "Microsoft",
-    logo: microsoftLogo,
-    title: "Cloud Engineer",
-    location: "Abuja",
-    type: "Remote",
-    salary: "$7k / month",
-    status: ["featured"],
-    skills: ["Azure", "DevOps"],
-    posted: "3 days ago",
-  },
-];
+import { useJobs } from "../../../hooks/useJobs";
 
 const FeaturedJobs = () => {
+  const { jobs } = useJobs();
+  const featuredJobs = jobs.slice(0, 4);
   return (
     <section className="py-24 bg-slate-50">
       <div className="container max-w-7xl mx-auto px-6">
         <div className="mb-14">
           <div className="flex items-center justify-between md:hidden">
-            <p className="font-medium text-blue-600">Featured Jobs</p>
+            <h2 className="font-medium text-blue-600">Featured Jobs</h2>
             <Link
               to="/"
               className="group inline-flex items-center gap-2 font-medium text-blue-600"
@@ -97,8 +49,8 @@ const FeaturedJobs = () => {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {jobs.map((job) => (
-            <JobCard key={job.title} job={job} />
+          {featuredJobs.map((job) => (
+            <JobCard key={job.id} job={job} />
           ))}
         </div>
       </div>
