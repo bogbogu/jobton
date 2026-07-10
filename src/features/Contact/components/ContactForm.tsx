@@ -1,34 +1,7 @@
-import React, { useState } from "react";
+import { useContactFormService } from "../services/useContactFormService";
 
 const ContactForm = () => {
-
-    type FormData = {
-        name: string,
-        email: string,
-        subject: string,
-        message: string,
-    }
-
-    const [formData, setFormData] = useState<FormData>({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }))
-    }
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        console.log(formData);
-    }
+  const { formData, handleChange, handleSubmit } = useContactFormService();
 
     return (
         <form onSubmit={handleSubmit} className="max-w-5xl mx-auto rounded-lg border border-slate-200 p-8 space-y-6">

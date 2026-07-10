@@ -1,8 +1,8 @@
 // import { Link } from 'react-router'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import avatarOne from "../../assets/images/hero/1.jpg";
-import avatarTwo from "../../assets/images/hero/2.jpg";
-import avatarThree from "../../assets/images/hero/3.jpg";
+import avatarOne from "../../../assets/images/hero/1.jpg";
+import avatarTwo from "../../../assets/images/hero/2.jpg";
+import avatarThree from "../../../assets/images/hero/3.jpg";
 
 const Hero = () => {
   return (

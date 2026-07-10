@@ -1,4 +1,4 @@
-import HireFreelancers from "../components/hireFreelancers/hireFreelancers";
+import HireFreelancers from '../features/HireFreelancers/components/HireFreelancers';
 
 const HireFreelancersPage = () => {
   return (

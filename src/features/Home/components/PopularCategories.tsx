@@ -1,37 +1,17 @@
 import { Link } from "react-router";
-import PopularCategoriesCard from "../ui/cards/PopularCategoriesCard";
-import { categories } from "../../lib/categories";
+import PopularCategoriesCard from "../../../components/ui/cards/PopularCategoriesCard";
+import { useCategories } from "../../../hooks/useCategories";
 import { ArrowRight } from "lucide-react";
 
 const PopularCategories = () => {
+  const { categories } = useCategories();
   return (
     <section className="bg-white max-w-7xl mx-auto py-20">
       <div className="container mx-auto px-6">
-        {/* <div className="mb-14 flex items-end justify-between">
-          <div>
-            <p className="font-medium text-blue-600">Popular Categories</p>
-
-            <h2 className="mt-2 text-4xl font-bold">
-              Explore jobs by category
-            </h2>
-
-            <p className="mt-4 max-w-xl text-slate-500">
-              Discover verified openings from top employers hiring now.
-            </p>
-          </div>
-          <Link
-            to="/"
-            className="group inline-flex items-center gap-2 font-medium text-blue-600 transition-colors hover:text-blue-700"
-          >
-            View all categories
-            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
-        </div> */}
-
 
         <div className="mb-14">
           <div className="flex items-center justify-between md:hidden">
-            <p className="font-medium text-blue-600">Popular Categories</p>
+            <h2 className="font-medium text-blue-600">Popular Categories</h2>
             <Link
               to="/"
               className="group inline-flex items-center gap-2 font-medium text-blue-600"
@@ -42,7 +22,7 @@ const PopularCategories = () => {
           </div>
           <div className="hidden md:flex items-end justify-between">
             <div>
-              <p className="font-medium text-blue-600">Featured Jobs</p>
+              <h2 className="font-medium text-blue-600">Popular Categories</h2>
               <p className="mt-2 text-4xl font-bold">
               Explore jobs by category
               </p>

@@ -1,5 +1,5 @@
-import Contact from '../components/Contact'
-import RecruitmentAd from '../components/RecruitmentAd'
+import Contact from '../features/Contact/components/Contact'
+import RecruitmentAd from '../components/ui/RecruitmentAd'
 
 const ContactUs = () => {
     return (

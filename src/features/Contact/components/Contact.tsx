@@ -1,6 +1,5 @@
-import React from 'react'
-import PageBanner from './ui/PageBanner'
-import ContactForm from './contact/ContactForm'
+import PageBanner from '../../../components/ui/PageBanner'
+import ContactForm from './ContactForm'
 
 const Contact = () => {
     return (
