@@ -4,11 +4,11 @@ const ContactForm = () => {
   const { formData, handleChange, handleSubmit } = useContactFormService();
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-5xl mx-auto rounded-lg border border-slate-200 p-8 space-y-6">
-            <h3 className="text-lg font-bold mb-10">Leave us a message</h3>
+        <form onSubmit={handleSubmit} className="max-w-5xl mx-auto rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-8 space-y-6">
+            <h3 className="text-lg font-bold mb-10 dark:text-white">Leave us a message</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="name">Your Name</label>
+                    <label htmlFor="name" className="dark:text-slate-300">Your Name</label>
                     <input
                         onChange={handleChange}
                         id="name"
@@ -17,12 +17,12 @@ const ContactForm = () => {
                         value={formData.name}
                         placeholder="Name"
                         required
-                        className="w-full rounded-md border border-gray-300 p-3"
+                        className="w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-3"
                     />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="email">Your Email</label>
+                    <label htmlFor="email" className="dark:text-slate-300">Your Email</label>
                     <input
                         onChange={handleChange}
                         id="email"
@@ -31,13 +31,13 @@ const ContactForm = () => {
                         type="email"
                         placeholder="Email"
                         required
-                        className="w-full rounded-md border border-gray-300 p-3"
+                        className="w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-3"
                     />
                 </div>
             </div>
 
             <div className="flex flex-col gap-2">
-                <label htmlFor="subject">Subject</label>
+                <label htmlFor="subject" className="dark:text-slate-300">Subject</label>
                 <input
                     onChange={handleChange}
                     id="subject"
@@ -46,12 +46,12 @@ const ContactForm = () => {
                     type="text"
                     placeholder="Subject"
                     required
-                    className="w-full rounded-md border border-gray-300 p-3"
+                    className="w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-3"
                 />
             </div>
 
             <div className="flex flex-col gap-2">
-                <label htmlFor="message">Message</label>
+                <label htmlFor="message" className="dark:text-slate-300">Message</label>
                 <textarea
                     onChange={handleChange}
                     id="message"
@@ -60,7 +60,7 @@ const ContactForm = () => {
                     placeholder="Message"
                     rows={6}
                     required
-                    className="w-full rounded-md border border-gray-300 p-3 resize-none"
+                    className="w-full rounded-md border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-3 resize-none"
                 />
             </div>
 

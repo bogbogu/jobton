@@ -7,7 +7,7 @@ import avatarThree from "../../../assets/images/hero/3.jpg";
 const Hero = () => {
   return (
     <>
-      <section className="relative max-h-lvh-  overflow-hidden bg-gradient-to-b from-[#F8FBFF] to-white">
+      <section className="relative max-h-lvh-  overflow-hidden bg-gradient-to-b from-[#F8FBFF] to-white dark:from-slate-900 dark:to-slate-900 transition-colors duration-200">
         {/* Background Blur */}
         <div className="absolute -top-32 -left-24 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl"></div>
         <div className="absolute top-16 right-0 h-80 w-80 rounded-full bg-blue-100/50 blur-3xl"></div>
@@ -22,39 +22,40 @@ const Hero = () => {
         </div>
         <div
           className="absolute -bottom-56 left-1/2 -translate-x-1/2 h-[550px] w-[1200px] rounded-full bg-blue-200/35 blur-[130px] pointer-events-none"></div>
-        <div className="container max-w-7xl mx-auto px-6 py-28">
-          <div className="grid items-center gap-16 lg:grid-cols-2">
+        <div className="container max-w-7xl mx-auto px-6 py-14 md:py-24 lg:py-28">
+          <div className="grid items-center gap-10 lg:gap-16 lg:grid-cols-2">
             {/* LEFT */}
             <div>
-              <span className="inline-flex items-center rounded-full bg-blue-100 px-4 py-2 text-sm text-blue-700">
+              <span className="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/30 px-4 py-2 text-sm text-blue-700 dark:text-blue-300">
                 ✓ Verified jobs. Real opportunities.
               </span>
-              <h1 className="mt-8 text-6xl font-bold leading-tight text-slate-900">
+              <h1 className="mt-5 md:mt-8 text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight text-slate-900 dark:text-white">
                 Find trusted jobs.
                 <br />
                 <span className="text-[#2563EB]">Build your future.</span>
               </h1>
-              <p className="mt-6 max-w-lg text-lg text-slate-500">
+              <p className="mt-6 max-w-lg text-lg text-slate-500 dark:text-slate-400">
                 Jobton connects you with verified opportunities from top
                 companies across Nigeria and beyond.
               </p>
 
               {/* Search */}
-              <div className="mt-10 rounded-xl bg-white p-2 shadow-xl flex">
+              <div className="mt-8 rounded-xl bg-white dark:bg-slate-800 p-2 shadow-xl flex flex-col sm:flex-row gap-2 sm:gap-0">
                 <input
                   placeholder="Job title, keyword or company"
-                  className="flex-1 px-4 outline-none"
+                  className="flex-1 px-4 py-3 sm:py-0 outline-none rounded-lg sm:rounded-none text-sm bg-transparent text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
+                <div className="hidden sm:block w-px bg-slate-200 my-2" />
                 <input
                   placeholder="Location"
-                  className="flex-1 px-4 outline-none"
+                  className="flex-1 px-4 py-3 sm:py-0 outline-none rounded-lg sm:rounded-none text-sm bg-transparent text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500"
                 />
-                <button className="rounded-lg bg-[#2563EB] px-8 py-3 text-white">
+                <button className="rounded-lg bg-[#2563EB] px-6 py-3 text-white text-sm font-semibold">
                   Search
                 </button>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                <span className="text-sm text-slate-500">
+                <span className="text-sm text-slate-500 dark:text-slate-400">
                   Popular searches:
                 </span>
 
@@ -67,7 +68,7 @@ const Hero = () => {
                 ].map((item) => (
                   <button
                     key={item}
-                    className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 transition hover:bg-blue-100 hover:text-blue-700"
+                    className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-300 transition hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-700 dark:hover:text-blue-400"
                   >
                     {item}
                   </button>
@@ -97,7 +98,7 @@ const Hero = () => {
                 className="absolute top-72 right-80 h-40 w-40 rounded-full object-cover border-4 border-white shadow-xl z-10"
               />
               {/* Floating Card */}
-              <div className="absolute -bottom-20 right-0 rounded-2xl bg-white px-6 py-5 shadow-2xl z-40 w-72">
+              <div className="absolute -bottom-20 right-0 rounded-2xl bg-white dark:bg-slate-800 px-6 py-5 shadow-2xl z-40 w-72">
                 <div className="flex items-center mb-3">
                   <img
                     src={avatarThree}
@@ -112,8 +113,8 @@ const Hero = () => {
                     className="-ml-2 h-9 w-9 rounded-full border-2 border-white object-cover z-10"
                   />
                 </div>
-                <h3 className="text-4xl font-bold">10,000+</h3>
-                <p className="text-slate-500">
+                <h3 className="text-4xl font-bold dark:text-white">10,000+</h3>
+                <p className="text-slate-500 dark:text-slate-400">
                   Nigerians found jobs through Jobton
                 </p>
               </div>
