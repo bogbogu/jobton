@@ -5,7 +5,7 @@ import { useJobs } from "../../../hooks/useJobs";
 
 const FeaturedJobs = () => {
   const { jobs } = useJobs();
-  const featuredJobs = jobs.slice(0, 4);
+  const featuredJobs = jobs.slice(0, 6);
   return (
     <section className="py-24 bg-slate-50 dark:bg-slate-800 transition-colors duration-200">
       <div className="container max-w-7xl mx-auto px-6">
@@ -13,7 +13,7 @@ const FeaturedJobs = () => {
           <div className="flex items-center justify-between md:hidden">
             <h2 className="font-medium text-blue-600">Featured Jobs</h2>
             <Link
-              to="/"
+              to="/jobs"
               className="group inline-flex items-center gap-2 font-medium text-blue-600"
             >
               View all
@@ -31,7 +31,7 @@ const FeaturedJobs = () => {
               </p>
             </div>
             <Link
-              to="/"
+              to="/jobs"
               className="group inline-flex items-center gap-2 font-medium text-blue-600"
             >
               View all

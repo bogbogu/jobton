@@ -10,6 +10,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import type { Job } from "../../../hooks/useJobs";
+import CompanyLogo from "../../../components/CompanyLogo";
 
 const TABS = ["Overview", "About Company", "Requirements", "Benefits"];
 
@@ -20,19 +21,11 @@ const JobDetail = ({ job }: { job: Job }) => {
     <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-sm transition-colors duration-200">
       {/* Header */}
       <div className="flex items-start gap-4">
-        <img
-          src={job.logo}
-          alt={job.company}
-          className="h-14 w-14 rounded-xl object-contain border border-slate-100 dark:border-slate-700"
-          onError={(e) => {
-            const t = e.currentTarget;
-            t.onerror = null;
-            t.style.display = 'none';
-            const fallback = document.createElement('div');
-            fallback.className = 'h-14 w-14 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl shrink-0';
-            fallback.textContent = job.company[0];
-            t.parentNode?.insertBefore(fallback, t);
-          }}
+        <CompanyLogo
+          key={job.id}
+          company={job.company}
+          domain={job.domain}
+          logoUrl={job.logo_url}
         />
         <div>
           <div className="flex items-center gap-2 flex-wrap">
@@ -84,11 +77,10 @@ const JobDetail = ({ job }: { job: Job }) => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`shrink-0 px-3 pb-3 text-sm font-medium transition border-b-2 -mb-px ${
-                activeTab === tab
+              className={`shrink-0 px-3 pb-3 text-sm font-medium transition border-b-2 -mb-px ${activeTab === tab
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-              }`}
+                }`}
             >
               {tab}
             </button>

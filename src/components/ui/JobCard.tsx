@@ -1,4 +1,5 @@
 import { MapPin, BriefcaseBusiness, Bookmark, ThumbsDown } from "lucide-react";
+import CompanyLogo from "../CompanyLogo";
 import { useState } from "react";
 
 const statusStyles: Record<string, string> = {
@@ -14,19 +15,11 @@ const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; 
     <div onClick={onClick} className={`rounded-3xl bg-white dark:bg-slate-800 p-7 cursor-pointer ${className ?? ""}`}>
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
-          <img
-            src={job.logo}
-            alt={job.company}
-            className="h-14 w-14 rounded-xl object-contain"
-            onError={(e) => {
-              const t = e.currentTarget;
-              t.onerror = null;
-              t.style.display = 'none';
-              const fallback = document.createElement('div');
-              fallback.className = 'h-14 w-14 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl';
-              fallback.textContent = job.company[0];
-              t.parentNode?.insertBefore(fallback, t);
-            }}
+          <CompanyLogo
+            key={job.id}
+            company={job.company}
+            domain={job.domain}
+            logoUrl={job.logo_url}
           />
 
           <div>
@@ -42,11 +35,10 @@ const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; 
           >
             <Bookmark
               size={20}
-              className={`transition ${
-                saved
-                  ? "fill-blue-600 text-blue-600"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
+              className={`transition ${saved
+                ? "fill-blue-600 text-blue-600"
+                : "text-slate-500 hover:text-slate-700"
+                }`}
             />
           </button>
           <button
@@ -55,11 +47,10 @@ const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; 
           >
             <ThumbsDown
               size={20}
-              className={`transition ${
-                reported
-                  ? "fill-red-500 text-red-500"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
+              className={`transition ${reported
+                ? "fill-red-500 text-red-500"
+                : "text-slate-500 hover:text-slate-700"
+                }`}
             />
           </button>
         </div>

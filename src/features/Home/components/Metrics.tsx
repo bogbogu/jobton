@@ -24,38 +24,38 @@ const Metrics = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-3 text-center group flex flex-col items-center border border-slate-100 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-3 text-center group flex flex-col items-center border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-100 text-blue-600 group-hover:scale-110 transition-transform mb-1">
               <BriefcaseBusiness size={20} strokeWidth={2.2} />
             </div>
-            <div className="text-[10px] sm:text-xs font-medium text-slate-500 leading-tight px-0.5">
+            <div className="text-[10px] sm:text-xs font-medium text-slate-500  dark:text-slate-400 leading-tight px-0.5">
               Applications Tracked
             </div>
-            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 tabular-nums leading-none">
+            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-900  dark:text-white tabular-nums leading-none">
               969
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-3 text-center group flex flex-col items-center border border-slate-100 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-3 text-center group flex flex-col items-center border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-indigo-100 text-indigo-600 group-hover:scale-110 transition-transform mb-1">
               <Building2 size={20} strokeWidth={2.2} />
             </div>
-            <div className="text-[10px] sm:text-xs font-medium text-slate-500 leading-tight px-0.5">
+            <div className="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 leading-tight px-0.5">
               Companies Reached
             </div>
-            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 tabular-nums leading-none">
+            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tabular-nums leading-none">
               893
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-3 text-center group flex flex-col items-center border border-slate-100 shadow-sm hover:shadow-md transition-all">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-3 text-center group flex flex-col items-center border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-all">
             <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-purple-100 text-purple-600 group-hover:scale-110 transition-transform mb-1">
               <MailCheck size={20} strokeWidth={2.2} />
             </div>
-            <div className="text-[10px] sm:text-xs font-medium text-slate-500 leading-tight px-0.5">
+            <div className="text-[10px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 leading-tight px-0.5">
               Emails Processed
             </div>
-            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-900 tabular-nums leading-none">
+            <div className="text-lg sm:text-2xl md:text-3xl font-bold text-slate-900  dark:text-white tabular-nums leading-none">
               2,208
             </div>
           </div>
