@@ -3,7 +3,8 @@ import { useState } from "react";
 export interface Job {
   id: number;
   company: string;
-  logo: string;
+  domain: string;
+  logo_url?: string | null;
   title: string;
   location: string;
   type: string;
@@ -25,7 +26,8 @@ const jobsData: Job[] = [
   {
     id: 1,
     company: "Flutterwave",
-    logo: "https://logo.clearbit.com/flutterwave.com",
+    domain: "flutterwave.com",
+    logo_url: null,
     title: "Senior Product Designer",
     location: "Lagos, Nigeria (Remote)",
     type: "Full Time",
@@ -51,7 +53,8 @@ const jobsData: Job[] = [
   {
     id: 2,
     company: "Google",
-    logo: "https://logo.clearbit.com/google.com",
+    domain: "google.com",
+    logo_url: null,
     title: "Product Designer",
     location: "Lagos, Nigeria",
     type: "Full Time",
@@ -76,7 +79,8 @@ const jobsData: Job[] = [
   {
     id: 3,
     company: "Microsoft",
-    logo: "https://logo.clearbit.com/microsoft.com",
+    domain: "microsoft.com",
+    logo_url: null,
     title: "UI/UX Designer",
     location: "Abuja, Nigeria",
     type: "On-site",
@@ -101,7 +105,8 @@ const jobsData: Job[] = [
   {
     id: 4,
     company: "Meta",
-    logo: "https://logo.clearbit.com/meta.com",
+    domain: "flutterwave.com",
+    logo_url: null,
     title: "Product Designer",
     location: "Remote",
     type: "Contract",
@@ -126,7 +131,8 @@ const jobsData: Job[] = [
   {
     id: 5,
     company: "Google",
-    logo: "https://logo.clearbit.com/google.com",
+    domain: 'google.com',
+    logo_url: null,
     title: "Senior UX Designer",
     location: "Remote",
     type: "Full Time",
@@ -151,7 +157,8 @@ const jobsData: Job[] = [
   {
     id: 6,
     company: "Microsoft",
-    logo: "https://logo.clearbit.com/microsoft.com",
+    domain: 'microsoft.com',
+    logo_url: null,
     title: "Product Designer",
     location: "On-site",
     type: "Full Time",
@@ -176,7 +183,8 @@ const jobsData: Job[] = [
   {
     id: 7,
     company: "Spotify",
-    logo: "https://logo.clearbit.com/spotify.com",
+    domain: "spotify.com",
+    logo_url: null,
     title: "Product Designer",
     location: "Remote",
     type: "Full Time",
@@ -201,7 +209,8 @@ const jobsData: Job[] = [
   {
     id: 8,
     company: "Netflix",
-    logo: "https://logo.clearbit.com/netflix.com",
+    domain: "netflix.com",
+    logo_url: null,
     title: "Senior UI Designer",
     location: "Remote",
     type: "Full Time",
@@ -226,7 +235,8 @@ const jobsData: Job[] = [
   {
     id: 9,
     company: "Airbnb",
-    logo: "https://logo.clearbit.com/airbnb.com",
+    domain: "airbnb.com",
+    logo_url: null,
     title: "UX Designer",
     location: "Remote",
     type: "Full Time",
@@ -251,7 +261,8 @@ const jobsData: Job[] = [
   {
     id: 10,
     company: "Paystack",
-    logo: "https://logo.clearbit.com/paystack.com",
+    domain: "paystack.com",
+    logo_url: null,
     title: "Product Designer",
     location: "Lagos, Nigeria",
     type: "Hybrid",
@@ -276,7 +287,8 @@ const jobsData: Job[] = [
   {
     id: 11,
     company: "Notion",
-    logo: "https://logo.clearbit.com/notion.so",
+    domain: "notion.so",
+    logo_url: null,
     title: "Visual Designer",
     location: "Remote",
     type: "Contract",
