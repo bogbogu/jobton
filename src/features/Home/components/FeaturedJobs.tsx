@@ -7,7 +7,7 @@ const FeaturedJobs = () => {
   const { jobs } = useJobs();
   const featuredJobs = jobs.slice(0, 4);
   return (
-    <section className="py-24 bg-slate-50">
+    <section className="py-24 bg-slate-50 dark:bg-slate-800 transition-colors duration-200">
       <div className="container max-w-7xl mx-auto px-6">
         <div className="mb-14">
           <div className="flex items-center justify-between md:hidden">
@@ -23,10 +23,10 @@ const FeaturedJobs = () => {
           <div className="hidden md:flex items-end justify-between">
             <div>
               <p className="font-medium text-blue-600">Featured Jobs</p>
-              <p className="mt-2 text-4xl font-bold">
+              <p className="mt-2 text-xl sm:text-2xl lg:text-4xl font-bold dark:text-white">
                 Find your next opportunity
               </p>
-              <p className="mt-4 max-w-xl text-slate-500">
+              <p className="mt-4 max-w-xl text-slate-500 dark:text-slate-400">
                 Discover verified openings from top employers hiring now.
               </p>
             </div>
@@ -39,10 +39,10 @@ const FeaturedJobs = () => {
             </Link>
           </div>
           <div className="mt-4 md:hidden">
-            <p className="text-2xl xs:text-3xl sm:text-4xl font-bold">
+            <p className="text-xl sm:text-2xl lg:text-4xl font-bold dark:text-white">
               Find your next opportunity
             </p>
-            <p className="mt-4 text-slate-500">
+            <p className="mt-4 text-slate-500 dark:text-slate-400">
               Discover verified openings from top employers hiring now.
             </p>
           </div>
@@ -50,7 +50,9 @@ const FeaturedJobs = () => {
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {featuredJobs.map((job) => (
-            <JobCard key={job.id} job={job} />
+            <JobCard key={job.id} job={job} className="shadow-sm transition hover:shadow-xl border   border-slate-200
+        dark:border-slate-700 hover:border-blue-200         dark:hover:border-blue-500
+" />
           ))}
         </div>
       </div>

@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors duration-200;
+  }
+}
+
 /* :root {
   --text: #6b6375;
   --text-h: #08060d;

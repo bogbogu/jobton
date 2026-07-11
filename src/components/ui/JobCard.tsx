@@ -1,4 +1,4 @@
-import { MapPin, BriefcaseBusiness, Bookmark } from "lucide-react";
+import { MapPin, BriefcaseBusiness, Bookmark, ThumbsDown } from "lucide-react";
 import { useState } from "react";
 
 const statusStyles: Record<string, string> = {
@@ -7,37 +7,62 @@ const statusStyles: Record<string, string> = {
   urgent: "bg-red-100 text-red-700",
 };
 
-const JobCard = ({ job, onClick }: { job: any; onClick?: () => void }) => {
+const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; className?: string }) => {
   const [saved, setSaved] = useState(job.saved ?? false);
+  const [reported, setReported] = useState(false);
   return (
-    <div onClick={onClick} className="rounded-3xl bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <div onClick={onClick} className={`rounded-3xl bg-white dark:bg-slate-800 p-7 cursor-pointer ${className ?? ""}`}>
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
           <img
             src={job.logo}
             alt={job.company}
             className="h-14 w-14 rounded-xl object-contain"
+            onError={(e) => {
+              const t = e.currentTarget;
+              t.onerror = null;
+              t.style.display = 'none';
+              const fallback = document.createElement('div');
+              fallback.className = 'h-14 w-14 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl';
+              fallback.textContent = job.company[0];
+              t.parentNode?.insertBefore(fallback, t);
+            }}
           />
 
           <div>
-            <p className="font-bold text-base">{job.title}</p>
-            <p className="text-slate-500">{job.company}</p>
+            <p className="font-bold text-base dark:text-white">{job.title}</p>
+            <p className="text-slate-500 dark:text-slate-400">{job.company}</p>
           </div>
         </div>
 
-        <button
-          onClick={() => setSaved(!saved)}
-          className="rounded-full p-2 transition hover:bg-slate-100"
-        >
-          <Bookmark
-            size={20}
-            className={`transition ${
-              saved
-                ? "fill-blue-600 text-blue-600"
-                : "text-slate-500 hover:text-slate-700"
-            }`}
-          />
-        </button>
+        <div className="flex flex-col items-center">
+          <button
+            onClick={(e) => { e.stopPropagation(); setSaved(!saved); }}
+            className="rounded-full p-2 transition hover:bg-slate-100 dark:hover:bg-slate-700"
+          >
+            <Bookmark
+              size={20}
+              className={`transition ${
+                saved
+                  ? "fill-blue-600 text-blue-600"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); setReported(!reported); }}
+            className="rounded-full p-2 transition hover:bg-slate-100 dark:hover:bg-slate-700"
+          >
+            <ThumbsDown
+              size={20}
+              className={`transition ${
+                reported
+                  ? "fill-red-500 text-red-500"
+                  : "text-slate-500 hover:text-slate-700"
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
@@ -52,31 +77,31 @@ const JobCard = ({ job, onClick }: { job: any; onClick?: () => void }) => {
       </div>
 
       <div className="mt-5 flex flex-wrap gap-5 text-sm text-slate-500">
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-2 dark:text-slate-400">
           <MapPin size={16} />
           {job.location}
         </span>
 
-        <span className="flex items-center gap-2">
+        <span className="flex items-center gap-2 dark:text-slate-400">
           <BriefcaseBusiness size={16} />
           {job.type}
         </span>
       </div>
 
-      <p className="mt-4 text-[14px] font-semibold text-slate-900">{job.salary}</p>
+      <p className="mt-4 text-[14px] font-semibold text-slate-900 dark:text-white">{job.salary}</p>
 
       <div className="mt-5 flex flex-wrap gap-2">
         {job.skills.map((skill: string) => (
           <span
             key={skill}
-            className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700"
+            className={`rounded-full bg-slate-100 dark:bg-slate-700 px-3 py-1 text-xs text-slate-700 dark:text-slate-300`}
           >
             {skill}
           </span>
         ))}
       </div>
 
-      <p className="mt-6 text-sm text-slate-500">Posted {job.posted}</p>
+      <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">Posted {job.posted}</p>
     </div>
   );
 };

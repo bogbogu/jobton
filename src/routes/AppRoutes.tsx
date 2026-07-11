@@ -4,6 +4,7 @@ import ContactUs from "../pages/ContactUs";
 import MainLayout from "../components/layout/MainLayout";
 import HireFreelancersPage from "../pages/HireFreelancersPage";
 import AllJobs from "../pages/AllJobs";
+import SingleJobDetailPage from "../pages/SingleJobDetailPage";
 
 const AppRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const AppRoutes = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Homepage />} />
           <Route path="/jobs" element={<AllJobs />} />
+          <Route path="/jobs/:id" element={<SingleJobDetailPage />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/hire-freelancers" element={<HireFreelancersPage />} />
         </Route>
