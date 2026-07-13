@@ -4,7 +4,7 @@ const ContactForm = () => {
   const { formData, handleChange, handleSubmit } = useContactFormService();
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-5xl mx-auto rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="max-w-5xl mx-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-8 space-y-6">
             <h3 className="text-lg font-bold mb-10 dark:text-white">Leave us a message</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
@@ -66,7 +66,7 @@ const ContactForm = () => {
 
             <button
                 type="submit"
-                className="rounded-md bg-blue-600 bg-[#6593FC-] px-6 py-3 text-white hover:bg-blue-700"
+                className="rounded-md bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
             >
                 Send Message
             </button>
