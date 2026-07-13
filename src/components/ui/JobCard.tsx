@@ -1,4 +1,5 @@
-import { MapPin, BriefcaseBusiness, Bookmark, ThumbsDown } from "lucide-react";
+import { MapPin, BriefcaseBusiness, Bookmark} from "lucide-react";
+// import { ThumbsDown } from "lucide-react";
 import CompanyLogo from "../CompanyLogo";
 import { useState } from "react";
 
@@ -10,7 +11,7 @@ const statusStyles: Record<string, string> = {
 
 const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; className?: string }) => {
   const [saved, setSaved] = useState(job.saved ?? false);
-  const [reported, setReported] = useState(false);
+  // const [reported, setReported] = useState(false);
   return (
     <div onClick={onClick} className={`rounded-3xl bg-white dark:bg-slate-800 p-7 cursor-pointer ${className ?? ""}`}>
       <div className="flex items-start justify-between">
@@ -41,7 +42,7 @@ const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; 
                 }`}
             />
           </button>
-          <button
+          {/* <button
             onClick={(e) => { e.stopPropagation(); setReported(!reported); }}
             className="rounded-full p-2 transition hover:bg-slate-100 dark:hover:bg-slate-700"
           >
@@ -52,7 +53,7 @@ const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; 
                 : "text-slate-500 hover:text-slate-700"
                 }`}
             />
-          </button>
+          </button> */}
         </div>
       </div>
 
