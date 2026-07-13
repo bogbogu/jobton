@@ -7,10 +7,12 @@ import AllJobs from "../pages/AllJobs";
 import SingleJobDetailPage from "../pages/SingleJobDetailPage";
 import AllCategories from "../pages/AllCategories";
 import AboutPage from "../pages/About";
+import ScrollToTop from "../components/layout/ScrollToTop";
 
 const AppRoutes = () => {
   return (
     <>
+      <ScrollToTop />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Homepage />} />
