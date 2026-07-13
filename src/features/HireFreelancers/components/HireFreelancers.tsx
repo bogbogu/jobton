@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import FreelancerProfileCard from "../../../components/ui/FreelancerProfileCard";
 import { useFreelancersService } from "../services/useFreelancersService";
 import FreelancerDetailsPanel from "./FreelancerDetailsPanel";
+import { X } from "lucide-react";
 
 const HireFreelancers = () => {
   const {
@@ -15,7 +16,17 @@ const HireFreelancers = () => {
     selectedFreelancer,
     selectedFreelancerId,
     setSelectedFreelancerId,
+    showFreelancerDetailsModal,
+    handleOpenFreelancerDetailsModal,
+    handleCloseFreelancerDetailsModal,
   } = useFreelancersService();
+
+  const handleFreelancerSelect = (id: number) => {
+    setSelectedFreelancerId(id);
+    if (window.innerWidth < 1024) {
+      handleOpenFreelancerDetailsModal();
+    }
+  };
 
   return (
     <>
@@ -68,7 +79,7 @@ const HireFreelancers = () => {
                   key={freelancer.id}
                   freelancer={freelancer}
                   isActive={selectedFreelancerId === freelancer.id}
-                  onSelect={() => setSelectedFreelancerId(freelancer.id)}
+                  onSelect={() => handleFreelancerSelect(freelancer.id)}
                 />
               ))}
 
@@ -79,12 +90,36 @@ const HireFreelancers = () => {
               )}
             </div>
 
-            <div className="lg:col-span-7 lg:sticky lg:top-24 self-start">
+            <div className="hidden lg:block lg:col-span-7 lg:sticky lg:top-24 self-start">
               <FreelancerDetailsPanel freelancer={selectedFreelancer} />
             </div>
           </div>
         </div>
       </section>
+
+      {showFreelancerDetailsModal && (
+        <div className="fixed inset-0 z-50 lg:hidden flex items-center justify-center p-4">
+          <button
+            type="button"
+            aria-label="Close freelancer details modal"
+            onClick={handleCloseFreelancerDetailsModal}
+            className="absolute inset-0 bg-slate-900/40"
+          />
+
+          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl p-4 sm:p-5">
+            <button
+              type="button"
+              onClick={handleCloseFreelancerDetailsModal}
+              className="absolute right-3 top-3 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+              aria-label="Close"
+            >
+              <X size={16} />
+            </button>
+
+            <FreelancerDetailsPanel freelancer={selectedFreelancer} />
+          </div>
+        </div>
+      )}
     </>
   );
 };

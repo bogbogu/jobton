@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useJobs, type Job } from "../../../hooks/useJobs";
-import { sortOptions } from "../../../constants/fieldsKeyValues";
+import { sortOptions, OTHER_REPORT_REASON_KEY } from "../../../constants/fieldsKeyValues";
 
 export const useJobsPageService = () => {
   const { jobs } = useJobs();
@@ -35,6 +35,9 @@ export const useJobsPageService = () => {
   const [reportedJobIds, setReportedJobIds] = useState<Set<number>>(new Set());
   const [shareToast, setShareToast] = useState(false);
   const [reportToast, setReportToast] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [selectedReportReason, setSelectedReportReason] = useState("");
+  const [otherReportReason, setOtherReportReason] = useState("");
 
   const isFiltered = !!(activeKeyword || activeLocation || selectedType || selectedIndustry);
 
@@ -104,9 +107,28 @@ export const useJobsPageService = () => {
     setTimeout(() => setShareToast(false), 2000);
   };
 
-  const handleReport = () => {
+  const handleOpenReportModal = () => {
     if (!selectedJob || reportedJobIds.has(selectedJob.id)) return;
+    setSelectedReportReason("");
+    setOtherReportReason("");
+    setShowReportModal(true);
+  };
+
+  const handleCloseReportModal = () => {
+    setShowReportModal(false);
+    setSelectedReportReason("");
+    setOtherReportReason("");
+  };
+
+  const canSubmitReport =
+    !!selectedJob &&
+    !!selectedReportReason &&
+    (selectedReportReason !== OTHER_REPORT_REASON_KEY || !!otherReportReason.trim());
+
+  const handleReport = () => {
+    if (!canSubmitReport || !selectedJob) return;
     setReportedJobIds((prev) => new Set(prev).add(selectedJob.id));
+    handleCloseReportModal();
     setReportToast(true);
     setTimeout(() => setReportToast(false), 2500);
   };
@@ -132,7 +154,16 @@ export const useJobsPageService = () => {
     handleCardClick,
     handleSave,
     handleShare,
+    handleOpenReportModal,
+    handleCloseReportModal,
     handleReport,
+    canSubmitReport,
+    showReportModal,
+    selectedReportReason,
+    setSelectedReportReason,
+    otherReportReason,
+    setOtherReportReason,
+    OTHER_REPORT_REASON_KEY,
     isSelectedJobSaved,
     isSelectedJobReported,
     shareToast,

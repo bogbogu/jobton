@@ -44,3 +44,14 @@ export const salaryRangeOptions = [
   { key: "500K_1M", value: "₦500,000 – ₦1,000,000" },
   { key: "ABOVE_1M", value: "Above ₦1,000,000" },
 ];
+
+export const reportReasonOptions = [
+  { key: "MISLEADING", value: "Misleading or inaccurate details" },
+  { key: "SCAM", value: "Potential scam or fraud" },
+  { key: "SPAM", value: "Spam or duplicate posting" },
+  { key: "INAPPROPRIATE", value: "Inappropriate or offensive content" },
+  { key: "EXPIRED", value: "Position already filled or expired" },
+  { key: "OTHER", value: "Other" },
+];
+
+export const OTHER_REPORT_REASON_KEY = "OTHER";
