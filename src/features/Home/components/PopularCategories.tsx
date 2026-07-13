@@ -1,10 +1,12 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import PopularCategoriesCard from "../../../components/ui/cards/PopularCategoriesCard";
 import { useCategories } from "../../../hooks/useCategories";
 import { ArrowRight } from "lucide-react";
 
 const PopularCategories = () => {
   const { categories } = useCategories();
+  const popularCategories = categories.slice(0, 6);
+
   return (
     <section className="bg-white dark:bg-slate-900 max-w-7xl mx-auto py-20 transition-colors duration-200">
       <div className="container mx-auto px-6">
@@ -13,7 +15,7 @@ const PopularCategories = () => {
           <div className="flex items-center justify-between md:hidden">
             <h2 className="font-medium text-blue-600">Popular Categories</h2>
             <Link
-              to="/"
+              to="/categories"
               className="group inline-flex items-center gap-2 font-medium text-blue-600"
             >
               View all
@@ -24,14 +26,14 @@ const PopularCategories = () => {
             <div>
               <h2 className="font-medium text-blue-600">Popular Categories</h2>
               <p className="mt-2 text-xl sm:text-2xl lg:text-4xl font-bold dark:text-white">
-              Explore jobs by category
+                Explore jobs by category
               </p>
               <p className="mt-4 max-w-xl text-slate-500 dark:text-slate-400">
-              Discover verified openings from top employers hiring now.
+                Discover verified openings from top employers hiring now.
               </p>
             </div>
             <Link
-              to="/"
+              to="/categories"
               className="group inline-flex items-center gap-2 font-medium text-blue-600"
             >
               View all
@@ -52,7 +54,7 @@ const PopularCategories = () => {
 
 
         <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-6">
-          {categories.map((category) => (
+          {popularCategories.map((category) => (
             <PopularCategoriesCard
               key={category.title}
               icon={category.icon}
