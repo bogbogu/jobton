@@ -4,6 +4,7 @@ import FreelancerProfileCard from "../../../components/ui/FreelancerProfileCard"
 import { useFreelancersService } from "../services/useFreelancersService";
 import FreelancerDetailsPanel from "./FreelancerDetailsPanel";
 import { X } from "lucide-react";
+import { useEffect } from "react";
 
 const HireFreelancers = () => {
   const {
@@ -27,6 +28,20 @@ const HireFreelancers = () => {
       handleOpenFreelancerDetailsModal();
     }
   };
+
+  useEffect(() => {
+    if (!showFreelancerDetailsModal) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showFreelancerDetailsModal]);
 
   return (
     <>
@@ -103,14 +118,14 @@ const HireFreelancers = () => {
             type="button"
             aria-label="Close freelancer details modal"
             onClick={handleCloseFreelancerDetailsModal}
-            className="absolute inset-0 bg-slate-900/40"
+            className="absolute inset-0 bg-slate-900/55 backdrop-blur-[1px]"
           />
 
           <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl p-4 sm:p-5">
             <button
               type="button"
               onClick={handleCloseFreelancerDetailsModal}
-              className="absolute right-3 top-3 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+              className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 shadow-sm transition hover:bg-slate-200 hover:text-slate-700 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
               aria-label="Close"
             >
               <X size={16} />

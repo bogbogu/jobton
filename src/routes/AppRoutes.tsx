@@ -8,6 +8,7 @@ import SingleJobDetailPage from "../pages/SingleJobDetailPage";
 import AllCategories from "../pages/AllCategories";
 import AboutPage from "../pages/About";
 import ScrollToTop from "../components/layout/ScrollToTop";
+import NotFound from "../pages/NotFound";
 
 const AppRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes = () => {
           <Route path="/jobs/:id" element={<SingleJobDetailPage />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/hire-freelancers" element={<HireFreelancersPage />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
 
         {/* <Route path="/login" element={<Login />} />

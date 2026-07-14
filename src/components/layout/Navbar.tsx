@@ -91,7 +91,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-4 pb-5 pt-3 flex flex-col gap-1 shadow-md">
+        <div className="absolute left-0 right-0 top-full md:hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-4 pb-5 pt-3 flex flex-col gap-1 shadow-xl">
           {navLinks.map((link) => (
             <NavLink
               key={link.to}
