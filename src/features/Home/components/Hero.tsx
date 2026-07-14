@@ -9,8 +9,8 @@ const Hero = () => {
     <>
       <section className="relative max-h-lvh-  overflow-hidden bg-gradient-to-b from-[#F8FBFF] to-white dark:from-slate-900 dark:to-slate-900 transition-colors duration-200">
         {/* Background Blur */}
-        <div className="absolute -top-32 -left-24 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl"></div>
-        <div className="absolute top-16 right-0 h-80 w-80 rounded-full bg-blue-100/50 blur-3xl"></div>
+        <div className="pointer-events-none absolute -top-24 -left-24 hidden h-72 w-72 rounded-full bg-sky-200/25 blur-3xl md:block md:h-96 md:w-96 md:bg-sky-200/35" />
+        <div className="pointer-events-none absolute top-10 right-0 hidden h-64 w-64 rounded-full bg-blue-100/20 blur-3xl md:block md:h-80 md:w-80 md:bg-blue-100/35" />
 
         {/* Dot Pattern */}
         <div className="absolute right-6 top-40 hidden lg:block">
@@ -20,8 +20,7 @@ const Hero = () => {
             ))}
           </div>
         </div>
-        <div
-          className="absolute -bottom-56 left-1/2 -translate-x-1/2 h-[550px] w-[1200px] rounded-full bg-blue-200/35 blur-[130px] pointer-events-none"></div>
+        <div className="pointer-events-none absolute -bottom-32 left-1/2 hidden h-[380px] w-[760px] -translate-x-1/2 rounded-full bg-blue-200/20 blur-[100px] md:block lg:h-[520px] lg:w-[1100px] lg:bg-blue-200/30 lg:blur-[130px]" />
         <div className="container max-w-7xl mx-auto px-6 py-14 md:py-24 lg:py-28">
           <div className="grid items-center gap-10 lg:gap-16 lg:grid-cols-2">
             {/* LEFT */}
