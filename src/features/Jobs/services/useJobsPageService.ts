@@ -1,11 +1,12 @@
-import { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useMemo, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useJobs, type Job } from "../../../hooks/useJobs";
 import { sortOptions, OTHER_REPORT_REASON_KEY } from "../../../constants/fieldsKeyValues";
 
 export const useJobsPageService = () => {
   const { jobs } = useJobs();
   const navigate = useNavigate();
+  const routeLocation = useLocation();
 
   // Search inputs (live)
   const [keyword, setKeyword] = useState("");
@@ -66,6 +67,15 @@ export const useJobsPageService = () => {
     return result;
   }, [jobs, activeKeyword, activeLocation, selectedType, selectedIndustry, sortBy]);
 
+  useEffect(() => {
+    const selectedId = Number(new URLSearchParams(routeLocation.search).get("selected"));
+    if (!selectedId) return;
+    const matchedJob = jobs.find((job) => job.id === selectedId);
+    if (matchedJob && matchedJob.id !== selectedJob?.id) {
+      setSelectedJob(matchedJob);
+    }
+  }, [routeLocation.search, jobs, selectedJob?.id]);
+
   const handleSearch = () => {
     setActiveKeyword(keyword);
     setActiveLocation(location);
@@ -83,7 +93,7 @@ export const useJobsPageService = () => {
 
   const handleCardClick = (job: Job) => {
     setSelectedJob(job);
-    navigate(`/jobs/${job.id}`);
+    navigate(`/jobs?selected=${job.id}`);
   };
 
   const handleSave = () => {

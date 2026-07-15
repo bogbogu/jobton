@@ -200,34 +200,37 @@ const Jobs = () => {
               )}
             </div>
 
-            {/* Save / Share / Report — desktop */}
+            {/* Save / Share / Report */}
             {selectedJob && (
-              <div className="hidden md:flex items-center gap-3 text-sm relative">
+              <div className="flex items-center gap-2 md:gap-3 text-sm relative">
                 <button
                   onClick={handleSave}
-                  className={`flex items-center gap-1.5 transition ${
+                  aria-label={isSelectedJobSaved ? "Saved" : "Save job"}
+                  className={`flex items-center gap-1.5 rounded-full px-2.5 py-1.5 md:px-0 md:py-0 transition ${
                     isSelectedJobSaved ? "text-blue-600 font-medium" : "text-slate-400 hover:text-slate-700"
                   }`}
                 >
                   <Bookmark size={14} className={isSelectedJobSaved ? "fill-blue-600" : ""} />
-                  {isSelectedJobSaved ? "Saved" : "Save"}
+                  <span className="hidden md:inline">{isSelectedJobSaved ? "Saved" : "Save"}</span>
                 </button>
                 <button
                   onClick={handleShare}
-                  className="flex items-center gap-1.5 text-slate-400 hover:text-slate-700 transition"
+                  aria-label={shareToast ? "Copied" : "Share job"}
+                  className="flex items-center gap-1.5 rounded-full px-2.5 py-1.5 md:px-0 md:py-0 text-slate-400 hover:text-slate-700 transition"
                 >
                   <Share2 size={14} />
-                  {shareToast ? "Copied!" : "Share"}
+                  <span className="hidden md:inline">{shareToast ? "Copied!" : "Share"}</span>
                 </button>
                 <button
                   onClick={handleOpenReportModal}
                   disabled={isSelectedJobReported}
-                  className={`flex items-center gap-1.5 transition ${
+                  aria-label={isSelectedJobReported ? "Job reported" : "Report job"}
+                  className={`flex items-center gap-1.5 rounded-full px-2.5 py-1.5 md:px-0 md:py-0 transition ${
                     isSelectedJobReported ? "text-red-400 cursor-default" : "text-slate-400 hover:text-red-500"
                   }`}
                 >
                   <Flag size={14} className={isSelectedJobReported ? "fill-red-400" : ""} />
-                  {reportToast ? "Reported" : isSelectedJobReported ? "Reported" : "Report"}
+                  <span className="hidden md:inline">{reportToast ? "Reported" : isSelectedJobReported ? "Reported" : "Report"}</span>
                 </button>
               </div>
             )}
