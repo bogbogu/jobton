@@ -9,12 +9,15 @@ import {
   ChevronDown,
   X,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import JobCard from "../../../components/ui/JobCard";
 import JobDetail from "./JobDetail";
 import { useJobsPageService } from "../services/useJobsPageService";
 import { jobTypeOptions, industryOptions, sortOptions, reportReasonOptions } from "../../../constants/fieldsKeyValues";
 
 const Jobs = () => {
+  const navigate = useNavigate();
+
   const {
     filteredJobs,
     keyword, setKeyword,
@@ -45,6 +48,15 @@ const Jobs = () => {
     shareToast,
     reportToast,
   } = useJobsPageService();
+
+  const handleJobCardClick = (job: (typeof filteredJobs)[number]) => {
+    if (window.innerWidth < 768) {
+      navigate(`/jobs/${job.id}`);
+      return;
+    }
+
+    handleCardClick(job);
+  };
 
   return (
     <section className="py-10 bg-slate-50 dark:bg-slate-900 min-h-screen transition-colors duration-200">
@@ -247,7 +259,7 @@ const Jobs = () => {
               filteredJobs.map((job) => (
                 <div
                   key={job.id}
-                  onClick={() => handleCardClick(job)}
+                  onClick={() => handleJobCardClick(job)}
                   className={`cursor-pointer rounded-3xl transition ring-2 ${
                     selectedJob?.id === job.id
                       ? "ring-blue-500"
@@ -267,7 +279,7 @@ const Jobs = () => {
         </div>
 
         {showReportModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-x-0 bottom-0 top-16 z-50 flex items-center justify-center p-4">
             <button
               aria-label="Close report modal"
               onClick={handleCloseReportModal}
