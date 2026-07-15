@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import JobCard from "../../../components/ui/JobCard";
 import { ArrowRight } from "lucide-react";
 import { useJobs } from "../../../hooks/useJobs";
 
 const FeaturedJobs = () => {
   const { jobs } = useJobs();
+  const navigate = useNavigate();
   const featuredJobs = jobs.slice(0, 6);
   return (
     <section className="py-24 bg-slate-50 dark:bg-slate-800 transition-colors duration-200">
@@ -50,9 +51,14 @@ const FeaturedJobs = () => {
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {featuredJobs.map((job) => (
-            <JobCard key={job.id} job={job} className="shadow-sm transition hover:shadow-xl border   border-slate-200
+            <JobCard
+              key={job.id}
+              job={job}
+              onClick={() => navigate(`/jobs?selected=${job.id}`)}
+              className="shadow-sm transition hover:shadow-xl border   border-slate-200
         dark:border-slate-700 hover:border-blue-200         dark:hover:border-blue-500
-" />
+"
+            />
           ))}
         </div>
       </div>
