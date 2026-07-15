@@ -9,6 +9,7 @@ import AllCategories from "../pages/AllCategories";
 import AboutPage from "../pages/About";
 import ScrollToTop from "../components/layout/ScrollToTop";
 import NotFound from "../pages/NotFound";
+import SingleFreelancerDetailPage from "../pages/SingleFreelancerDetailPage";
 
 const AppRoutes = () => {
   return (
@@ -23,6 +24,7 @@ const AppRoutes = () => {
           <Route path="/jobs/:id" element={<SingleJobDetailPage />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/hire-freelancers" element={<HireFreelancersPage />} />
+          <Route path="/hire-freelancers/:id" element={<SingleFreelancerDetailPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

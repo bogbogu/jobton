@@ -93,7 +93,6 @@ export const useJobsPageService = () => {
 
   const handleCardClick = (job: Job) => {
     setSelectedJob(job);
-    navigate(`/jobs?selected=${job.id}`);
   };
 
   const handleSave = () => {

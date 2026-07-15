@@ -7,7 +7,6 @@ export const useFreelancersService = () => {
   const [selectedFreelancerId, setSelectedFreelancerId] = useState<number | null>(
     freelancers[0]?.id ?? null
   );
-  const [showFreelancerDetailsModal, setShowFreelancerDetailsModal] = useState(false);
 
   const categories = useMemo(() => {
     const values = Array.from(new Set(freelancers.map((freelancer) => freelancer.category)));
@@ -50,15 +49,6 @@ export const useFreelancersService = () => {
     [filteredFreelancers, selectedFreelancerId]
   );
 
-  const handleOpenFreelancerDetailsModal = () => {
-    if (!selectedFreelancerId) return;
-    setShowFreelancerDetailsModal(true);
-  };
-
-  const handleCloseFreelancerDetailsModal = () => {
-    setShowFreelancerDetailsModal(false);
-  };
-
   return {
     query,
     setQuery,
@@ -69,8 +59,5 @@ export const useFreelancersService = () => {
     selectedFreelancer,
     selectedFreelancerId,
     setSelectedFreelancerId,
-    showFreelancerDetailsModal,
-    handleOpenFreelancerDetailsModal,
-    handleCloseFreelancerDetailsModal,
   };
 };

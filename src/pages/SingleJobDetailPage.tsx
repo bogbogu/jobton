@@ -132,7 +132,7 @@ const SingleJobDetailPage = () => {
               relatedJobs.map((j) => (
                 <div
                   key={j.id}
-                  onClick={() => navigate(`/jobs?selected=${j.id}`)}
+                  onClick={() => navigate(`/jobs/${j.id}`)}
                   className={`cursor-pointer rounded-3xl transition ring-2 ${
                     selectedJob?.id === j.id ? "ring-blue-500" : "ring-transparent hover:ring-slate-200"
                   }`}
