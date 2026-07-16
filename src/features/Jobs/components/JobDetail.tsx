@@ -9,7 +9,7 @@ import {
   CheckCircle2,
   ExternalLink,
 } from "lucide-react";
-import type { Job } from "../../../hooks/useJobs";
+import type { Job } from "../../../types/job-type";
 import CompanyLogo from "../../../components/CompanyLogo";
 
 const TABS = ["Overview", "About Company", "Requirements", "Benefits"];
