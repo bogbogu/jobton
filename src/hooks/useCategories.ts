@@ -18,14 +18,8 @@ import {
   Scale,
   Truck,
   Palette,
-  type LucideIcon,
 } from "lucide-react";
-
-export interface Category {
-  icon: LucideIcon;
-  title: string;
-  jobs: string;
-}
+import type { Category } from "../types/category-type";
 
 const categoriesData: Category[] = [
   { icon: Monitor, title: "Technology", jobs: "1,240+ Jobs" },

@@ -1,10 +1,4 @@
-import type { LucideIcon } from "lucide-react";
-
-type PopularCategoriesCardProps = {
-  icon: LucideIcon;
-  title: string;
-  jobs: string;
-};
+import type { PopularCategoriesCardProps } from "../../types/categories-card-type";
 
 const PopularCategoriesCard = ({
   icon: Icon,

@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useJobs, type Job } from "../../../hooks/useJobs";
+import { useLocation } from "react-router-dom";
+import { useJobs } from "../../../hooks/useJobs";
+import type { Job } from "../../../types/job-type";
 import { sortOptions, OTHER_REPORT_REASON_KEY } from "../../../constants/fieldsKeyValues";
 
 export const useJobsPageService = () => {
   const { jobs } = useJobs();
-  const navigate = useNavigate();
   const routeLocation = useLocation();
 
   // Search inputs (live)

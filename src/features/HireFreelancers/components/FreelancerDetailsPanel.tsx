@@ -10,7 +10,7 @@ import {
   Star,
 } from "lucide-react";
 import type { ComponentType } from "react";
-import type { FreelancerHandlePlatform, FreelancerProfile } from "../../../types/freelancer";
+import type { FreelancerHandlePlatform, FreelancerProfile } from "../../../types/freelancer-type";
 
 type FreelancerDetailsPanelProps = {
   freelancer: FreelancerProfile | null;

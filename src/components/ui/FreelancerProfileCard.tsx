@@ -1,5 +1,5 @@
 import { BriefcaseBusiness, MapPin, Phone, Star } from "lucide-react";
-import type { FreelancerProfile } from "../../types/freelancer";
+import type { FreelancerProfile } from "../../types/freelancer-type";
 
 type FreelancerProfileCardProps = {
   freelancer: FreelancerProfile;
