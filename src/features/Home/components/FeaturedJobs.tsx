@@ -7,6 +7,16 @@ const FeaturedJobs = () => {
   const { jobs } = useJobs();
   const navigate = useNavigate();
   const featuredJobs = jobs.slice(0, 6);
+
+  const handleFeaturedJobClick = (jobId: number) => {
+    if (window.innerWidth < 768) {
+      navigate(`/jobs/${jobId}`);
+      return;
+    }
+
+    navigate(`/jobs?selected=${jobId}`);
+  };
+
   return (
     <section className="py-24 bg-slate-50 dark:bg-slate-800 transition-colors duration-200">
       <div className="container max-w-7xl mx-auto px-6">
@@ -54,10 +64,8 @@ const FeaturedJobs = () => {
             <JobCard
               key={job.id}
               job={job}
-              onClick={() => navigate(`/jobs?selected=${job.id}`)}
-              className="shadow-sm transition hover:shadow-xl border   border-slate-200
-        dark:border-slate-700 hover:border-blue-200         dark:hover:border-blue-500
-"
+              onClick={() => handleFeaturedJobClick(job.id)}
+              className="shadow-sm transition hover:shadow-xl border border-slate-200 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-500"
             />
           ))}
         </div>
