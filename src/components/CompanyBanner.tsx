@@ -11,6 +11,10 @@ const CompanyBanner = ({
 }: CompanyBannerProps) => {
     const companyBanner = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
 
+    if (domain) {
+
+    }
+
     return (
         <>
             <img
