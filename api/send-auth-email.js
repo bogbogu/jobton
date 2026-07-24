@@ -1,6 +1,7 @@
 import { Resend } from "resend";
+import "dotenv/config";
 
-const resendApiKey = process.env.RESEND_API_KEY;
+const resendApiKey = process.env.RESEND_API_KEY?.trim();
 const fromEmail = process.env.RESEND_FROM_EMAIL || "Jobton <onboarding@resend.dev>";
 const appBaseUrl = process.env.APP_BASE_URL || "https://jobton-frontend.vercel.app";
 
@@ -82,10 +83,16 @@ export default async function handler(req, res) {
   }
 
   if (!resend) {
+    const runtime = process.env.VERCEL ? "vercel" : "local-or-custom";
+    const hint =
+      runtime === "vercel"
+        ? "Set RESEND_API_KEY in your Vercel project Environment Variables and redeploy."
+        : "For local server testing, run the API runtime that executes api/send-auth-email.js and ensure RESEND_API_KEY is available to that process.";
+
     if (res) {
-      return res.status(500).json({ error: "RESEND_API_KEY is not configured." });
+      return res.status(500).json({ error: "RESEND_API_KEY is not configured.", hint, runtime });
     }
-    return json(500, { error: "RESEND_API_KEY is not configured." });
+    return json(500, { error: "RESEND_API_KEY is not configured.", hint, runtime });
   }
 
   try {

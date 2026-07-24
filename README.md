@@ -89,3 +89,9 @@ This project includes a server-side email function at `api/send-auth-email.js` u
 - `VITE_EMAIL_ENDPOINT` (optional, if your API runs on a different host)
 
 Use `.env.example` as the template.
+
+### Important runtime note
+
+- `RESEND_API_KEY` is read on the server function (`api/send-auth-email.js`), not in browser code.
+- Local `.env` only helps if the process executing that server function loads it.
+- If your frontend runs on one host and API functions run on another, set `VITE_EMAIL_ENDPOINT` to the API host.
