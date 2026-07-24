@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Sun, Moon, Menu, X } from "lucide-react";
+import { useAuth } from "../../hooks/useAuth";
 
 const navLinks = [
   { label: "Home", to: "/" },
@@ -10,8 +11,11 @@ const navLinks = [
   { label: "Contact", to: "/contact" },
 ];
 
+const SHOW_AUTH_NAV = false;
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, isAuthLoading, isAuthenticated, logout } = useAuth();
   const [isDark, setIsDark] = useState(
     () => document.documentElement.classList.contains("dark")
   );
@@ -86,12 +90,36 @@ const Navbar = () => {
           >
             <Moon size={18} />
           </button>
-          <Link
-            to="/subscribe"
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
-          >
-            Subscribe
-          </Link>
+
+          {/* Phase 2 auth actions: toggle SHOW_AUTH_NAV when you want auth in navigation */}
+          {SHOW_AUTH_NAV && (isAuthLoading ? (
+            <span className="text-sm text-slate-500 dark:text-slate-400">Checking session...</span>
+          ) : isAuthenticated ? (
+            <>
+              <span className="text-sm text-slate-600 dark:text-slate-300">{user?.name ?? user?.email}</span>
+              <button
+                onClick={logout}
+                className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm font-semibold px-5 py-2 rounded-full transition"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-sm font-semibold text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
+              >
+                Register
+              </Link>
+            </>
+          ))}
         </div>
 
         {/* Mobile: hamburger */}
@@ -147,14 +175,29 @@ const Navbar = () => {
                   <Moon size={18} />
                 </button>
               </div>
-              <Link
-                to="/subscribe"
-                onClick={() => setMenuOpen(false)}
+              {SHOW_AUTH_NAV && (
+                <Link
+                to={isAuthenticated ? "/" : "/login"}
+                onClick={() => {
+                  if (isAuthenticated) logout();
+                  setMenuOpen(false);
+                }}
                 className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
               >
-                Subscribe
+                {isAuthenticated ? "Logout" : "Login"}
               </Link>
+              )}
             </div>
+
+            {SHOW_AUTH_NAV && !isAuthenticated && !isAuthLoading && (
+              <Link
+                to="/register"
+                onClick={() => setMenuOpen(false)}
+                className="mt-3 inline-flex justify-center rounded-full border border-slate-200 dark:border-slate-700 px-5 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200"
+              >
+                Register
+              </Link>
+            )}
           </div>
         </>
       )}
