@@ -71,3 +71,21 @@ export default defineConfig([
   },
 ])
 ```
+
+## Auth Emails With Resend
+
+This project includes a server-side email function at `api/send-auth-email.js` used by auth flows:
+
+- Email verification after registration
+- Forgot password reset link
+- Welcome email
+- Password reset success email
+
+### Required environment variables
+
+- `RESEND_API_KEY` (server-side only)
+- `RESEND_FROM_EMAIL` (optional, defaults to `Jobton <onboarding@resend.dev>`)
+- `APP_BASE_URL` (used in email links)
+- `VITE_EMAIL_ENDPOINT` (optional, if your API runs on a different host)
+
+Use `.env.example` as the template.
