@@ -26,7 +26,7 @@ export const authEmailService = {
     });
 
     if (!response.ok) {
-      let message = "Unable to send email.";
+      let message = `Unable to send email via ${EMAIL_ENDPOINT}.`;
 
       try {
         const errorPayload = (await response.json()) as { error?: string };
