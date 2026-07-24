@@ -4,7 +4,7 @@ import AuthInput from "../../../../components/auth/AuthInput";
 import { useForgotPasswordFormService } from "../services/useForgotPasswordFormService";
 
 const ForgotPasswordForm = () => {
-  const { form, onSubmit, successMessage } = useForgotPasswordFormService();
+  const { form, onSubmit, successMessage, errorMessage } = useForgotPasswordFormService();
 
   const {
     register,
@@ -18,6 +18,12 @@ const ForgotPasswordForm = () => {
         {successMessage && (
           <p role="status" className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700 dark:border-green-900/60 dark:bg-green-950/30 dark:text-green-300">
             {successMessage}
+          </p>
+        )}
+
+        {errorMessage && (
+          <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
+            {errorMessage}
           </p>
         )}
 

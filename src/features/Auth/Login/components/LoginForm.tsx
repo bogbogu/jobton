@@ -15,7 +15,9 @@ const LoginForm = () => {
     formState: { errors, isSubmitting },
   } = form;
 
-  if (isAuthenticated) {
+  const shouldRedirectAuthenticatedUser = Boolean(nextPath);
+
+  if (isAuthenticated && shouldRedirectAuthenticatedUser) {
     return <Navigate to={nextPath ?? "/"} replace />;
   }
 

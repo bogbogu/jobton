@@ -76,6 +76,23 @@ const Navbar = () => {
 
         {/* Desktop right actions */}
         <div className="hidden md:flex items-center gap-3">
+          {isAuthLoading ? (
+            <span className="text-sm text-slate-500 dark:text-slate-400">Checking session...</span>
+          ) : isAuthenticated ? (
+            <button
+              onClick={logout}
+              className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm font-semibold px-5 py-2 rounded-full transition"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
+            >
+              Sign In
+            </Link>
+          )}
           <button
             onClick={enableLight}
             title="Light mode"
@@ -175,6 +192,27 @@ const Navbar = () => {
                   <Moon size={18} />
                 </button>
               </div>
+              {isAuthLoading ? (
+                <span className="text-sm text-slate-500 dark:text-slate-400">Checking session...</span>
+              ) : isAuthenticated ? (
+                <button
+                  onClick={() => {
+                    logout();
+                    setMenuOpen(false);
+                  }}
+                  className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm font-semibold px-5 py-2 rounded-full transition"
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
+                >
+                  Sign In
+                </Link>
+              )}
               {SHOW_AUTH_NAV && (
                 <Link
                 to={isAuthenticated ? "/" : "/login"}
