@@ -80,7 +80,7 @@ const VerifyEmailForm = () => {
           maxLength={6}
         />
 
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex flex-col gap-2 sm:flex-col">
           <button
             type="submit"
             disabled={isSubmitting || autoVerifyStatus === "loading"}
