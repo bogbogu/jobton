@@ -24,7 +24,7 @@ const LoginForm = () => {
   return (
     <AuthCard
       title="Welcome back"
-      description="Sign in to continue where you left off."
+      description="Login to continue where you left off."
       logoPlacement="outside"
     >
       <div className="space-y-3">

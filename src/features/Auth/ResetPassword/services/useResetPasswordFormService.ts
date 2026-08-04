@@ -3,8 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
-import { authEmailService } from "../../../../services/authEmail.service";
-import { authEmailFlowStorage } from "../../../../services/authEmailFlowStorage";
+import { authService } from "../../../../services/auth.service";
 
 const resetPasswordSchema = z
   .object({
@@ -32,7 +31,7 @@ export const useResetPasswordFormService = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = async () => {
+  const onSubmit = async (values: ResetPasswordFormValues) => {
     setSuccessMessage(null);
     setErrorMessage(null);
 
@@ -44,25 +43,17 @@ export const useResetPasswordFormService = () => {
       return;
     }
 
-    const email = authEmailFlowStorage.resolveResetToken(token);
-
-    if (!email) {
-      setErrorMessage("Reset link is invalid or expired. Please request a new one.");
-      return;
-    }
-
-    authEmailFlowStorage.consumeResetToken();
-
     try {
-      await authEmailService.send({
-        type: "password-reset-success",
-        to: email,
+      await authService.resetPassword({
+        token,
+        password: values.password,
       });
-    } catch {
-      // Password reset should still be considered successful even if notification email fails.
-    }
 
-    setSuccessMessage("Password updated. You can now sign in with your new password.");
+      setSuccessMessage("Password updated. You can now login with your new password.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unable to reset password right now.";
+      setErrorMessage(message);
+    }
   };
 
   return {
