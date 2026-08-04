@@ -23,6 +23,19 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+const isExplicitlyUnverifiedUser = (candidate: AuthUser | null) => {
+  if (!candidate) return false;
+
+  const flags = [
+    candidate.isVerified,
+    candidate.emailVerified,
+    candidate.isEmailVerified,
+    candidate.verified,
+  ];
+
+  return flags.some((flag) => typeof flag === "boolean") && flags.some((flag) => flag === false);
+};
+
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(() => localAuthTokenStorage.getToken());
@@ -100,14 +113,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       try {
         const result = await authService.login(payload);
+        let resolvedUser = result.user;
 
-        if (result.user) {
-          applySession(result.token, result.user);
-        } else {
-          applySession(result.token, null);
-          const currentUser = await authService.getCurrentUser();
-          setUser(currentUser);
+        if (!resolvedUser) {
+          resolvedUser = await authService.getCurrentUser();
         }
+
+        if (isExplicitlyUnverifiedUser(resolvedUser)) {
+          localAuthTokenStorage.clearToken();
+          setToken(null);
+          setUser(null);
+          throw new Error("Your account is pending verification. Please verify your email before logging in.");
+        }
+
+        applySession(result.token, resolvedUser);
       } catch (error) {
         const message = error instanceof Error ? error.message : "Unable to log in.";
         setAuthError(message);

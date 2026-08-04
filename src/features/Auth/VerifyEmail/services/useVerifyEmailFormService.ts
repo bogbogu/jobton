@@ -61,6 +61,13 @@ const normalizeVerificationError = (error: unknown) => {
 export const useVerifyEmailFormService = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const navigationState = location.state as
+    | {
+        email?: string;
+        pendingVerification?: boolean;
+        pendingVerificationMessage?: string;
+      }
+    | null;
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [autoVerifyStatus, setAutoVerifyStatus] = useState<AutoVerifyStatus>("idle");
@@ -68,11 +75,15 @@ export const useVerifyEmailFormService = () => {
   const [isResending, setIsResending] = useState(false);
   const hasAutoVerified = useRef(false);
   const redirectTimerRef = useRef<number | null>(null);
+  const pendingVerificationMessage = navigationState?.pendingVerification
+    ? navigationState.pendingVerificationMessage ??
+      "Your account is pending verification. Enter your code or resend the verification email."
+    : null;
 
   const params = new URLSearchParams(location.search);
   const token = params.get("token")?.trim() ?? "";
   const queryEmail = params.get("email")?.trim() ?? "";
-  const stateEmail = (location.state as { email?: string } | null)?.email?.trim() ?? "";
+  const stateEmail = navigationState?.email?.trim() ?? "";
   const initialEmail = queryEmail || stateEmail;
 
   const form = useForm<VerifyEmailFormValues>({
@@ -180,5 +191,6 @@ export const useVerifyEmailFormService = () => {
     autoVerifyStatus,
     autoVerifyMessage,
     isResending,
+    pendingVerificationMessage,
   };
 };
