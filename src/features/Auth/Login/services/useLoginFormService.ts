@@ -12,6 +12,13 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+const isPendingVerificationError = (message: string) => {
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("verify") && normalized.includes("email")
+  ) || normalized.includes("unverified") || normalized.includes("not verified") || normalized.includes("pending verification");
+};
+
 export const useLoginFormService = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,12 +38,30 @@ export const useLoginFormService = () => {
 
   const onSubmit = async (values: LoginFormValues) => {
     clearAuthError();
-    await login({
-      email: values.email,
-      password: values.password,
-    });
 
-    navigate(nextPath ?? "/", { replace: true });
+    try {
+      await login({
+        email: values.email,
+        password: values.password,
+      });
+
+      navigate(nextPath ?? "/", { replace: true });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unable to log in.";
+
+      if (isPendingVerificationError(message)) {
+        clearAuthError();
+        navigate(`/verify-email?email=${encodeURIComponent(values.email)}`, {
+          replace: true,
+          state: {
+            email: values.email,
+            pendingVerification: true,
+            pendingVerificationMessage:
+              "Your account is pending email verification. Verify your email to continue.",
+          },
+        });
+      }
+    }
   };
 
   return {
