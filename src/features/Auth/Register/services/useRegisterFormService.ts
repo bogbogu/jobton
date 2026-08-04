@@ -3,8 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../../hooks/useAuth";
-import { authEmailService } from "../../../../services/authEmail.service";
-import { authEmailFlowStorage } from "../../../../services/authEmailFlowStorage";
 
 const registerSchema = z
   .object({
@@ -47,26 +45,6 @@ export const useRegisterFormService = () => {
       email: values.email,
       password: values.password,
     });
-
-    const verificationCode = String(Math.floor(100000 + Math.random() * 900000));
-    authEmailFlowStorage.saveVerificationCode(values.email, verificationCode);
-
-    const verifyUrl = `${window.location.origin}/verify-email?email=${encodeURIComponent(values.email)}`;
-
-    await Promise.allSettled([
-      authEmailService.send({
-        type: "verify-email",
-        to: values.email,
-        firstName: values.firstName,
-        verificationCode,
-        verifyUrl,
-      }),
-      authEmailService.send({
-        type: "welcome",
-        to: values.email,
-        firstName: values.firstName,
-      }),
-    ]);
 
     navigate("/verify-email", { replace: true, state: { email: values.email } });
   };

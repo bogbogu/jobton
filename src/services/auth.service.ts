@@ -96,4 +96,40 @@ export const authService = {
 
     return user;
   },
+
+  verifyEmail: async (payload: { token?: string; email?: string; code?: string }) => {
+    return mainPost<ApiPayload, { token?: string; email?: string; code?: string }>(
+      "/api/auth/verify-email",
+      payload,
+      undefined,
+      "Unable to verify email."
+    );
+  },
+
+  resendVerification: async (payload: { email: string }) => {
+    return mainPost<ApiPayload, { email: string }>(
+      "/api/auth/resend-verification",
+      payload,
+      undefined,
+      "Unable to resend verification email."
+    );
+  },
+
+  forgotPassword: async (payload: { email: string }) => {
+    return mainPost<ApiPayload, { email: string }>(
+      "/api/auth/forgot-password",
+      payload,
+      undefined,
+      "Unable to start password reset."
+    );
+  },
+
+  resetPassword: async (payload: { token: string; password: string }) => {
+    return mainPost<ApiPayload, { token: string; password: string }>(
+      "/api/auth/reset-password",
+      payload,
+      undefined,
+      "Unable to reset password."
+    );
+  },
 };

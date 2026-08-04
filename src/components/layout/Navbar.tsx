@@ -90,7 +90,7 @@ const Navbar = () => {
               to="/login"
               className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
             >
-              Sign In
+              Login
             </Link>
           )}
           <button
@@ -210,7 +210,7 @@ const Navbar = () => {
                   onClick={() => setMenuOpen(false)}
                   className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2 rounded-full transition"
                 >
-                  Sign In
+                  Login
                 </Link>
               )}
               {SHOW_AUTH_NAV && (
