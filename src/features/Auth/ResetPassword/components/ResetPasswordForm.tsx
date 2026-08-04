@@ -13,7 +13,11 @@ const ResetPasswordForm = () => {
   } = form;
 
   return (
-    <AuthCard title="Reset password" description="Choose a new password for your account.">
+    <AuthCard
+      title="Reset password"
+      description="Choose a new password for your account."
+      logoPlacement="outside"
+    >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         {successMessage && (
           <p role="status" className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700 dark:border-green-900/60 dark:bg-green-950/30 dark:text-green-300">

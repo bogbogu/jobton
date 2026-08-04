@@ -23,7 +23,11 @@ const VerifyEmailForm = () => {
   } = form;
 
   return (
-    <AuthCard title="Verify your email" description="Enter the verification code sent to your inbox.">
+    <AuthCard
+      title="Verify your email"
+      description="Enter the verification code sent to your inbox."
+      logoPlacement="outside"
+    >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
         {pendingVerificationMessage && (
           <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300">
