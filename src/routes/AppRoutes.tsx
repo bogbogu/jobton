@@ -10,6 +10,7 @@ import AboutPage from "../pages/About";
 import ScrollToTop from "../components/layout/ScrollToTop";
 import NotFound from "../pages/NotFound";
 import SingleFreelancerDetailPage from "../pages/SingleFreelancerDetailPage";
+import SingleCompanyPage from "../pages/SingleCompanyPage";
 import LoginPage from "../pages/auth/Login";
 import RegisterPage from "../pages/auth/Register";
 import ForgotPasswordPage from "../pages/auth/ForgotPassword";
@@ -29,6 +30,7 @@ const AppRoutes = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/categories" element={<AllCategories />} />
           <Route path="/jobs/:id" element={<SingleJobDetailPage />} />
+          <Route path="/companies/:slug" element={<SingleCompanyPage />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/hire-freelancers" element={<HireFreelancersPage />} />

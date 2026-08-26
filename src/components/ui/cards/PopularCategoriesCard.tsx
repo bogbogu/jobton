@@ -22,7 +22,7 @@ const PopularCategoriesCard = ({
         dark:hover:border-blue-500
         hover:shadow-lg
       "
-      to="/categories"
+      to={`/jobs?category=${encodeURIComponent(title)}`}
     >
       <div className="mb-5 text-[#2563EB]">
         <Icon size={28} strokeWidth={1.8} />

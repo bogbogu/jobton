@@ -8,10 +8,10 @@ import { reportReasonOptions, OTHER_REPORT_REASON_KEY } from "../constants/field
 
 const SingleJobDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { jobs } = useJobs();
+  const { jobs, isLoading, toggleSave } = useJobs();
   const navigate = useNavigate();
 
-  const job = jobs.find((j) => j.id === Number(id));
+  const job = jobs.find((j) => j.id === id);
 
   const relatedJobs = job
     ? jobs.filter(
@@ -23,7 +23,7 @@ const SingleJobDetailPage = () => {
     : [];
 
   const selectedJob = job ?? null;
-  const [saved, setSaved] = useState(false);
+  const saved = job?.saved ?? false;
   const [reported, setReported] = useState(false);
   const [shareToast, setShareToast] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -64,10 +64,12 @@ const SingleJobDetailPage = () => {
   if (!job) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 text-slate-500">
-        <p className="text-lg font-medium">Job not found.</p>
-        <button onClick={() => navigate("/jobs")} className="text-blue-600 hover:underline text-sm">
-          Back to Jobs
-        </button>
+        <p className="text-lg font-medium">{isLoading ? "Loading job..." : "Job not found."}</p>
+        {!isLoading && (
+          <button onClick={() => navigate("/jobs")} className="text-blue-600 hover:underline text-sm">
+            Back to Jobs
+          </button>
+        )}
       </div>
     );
   }
@@ -79,7 +81,7 @@ const SingleJobDetailPage = () => {
         {/* Header row — back + actions */}
         <div className="flex items-center justify-between mb-5">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/jobs")}
             className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition"
           >
             <ArrowLeft size={16} />
@@ -89,7 +91,7 @@ const SingleJobDetailPage = () => {
           {/* Save / Share / Report icons */}
           <div className="flex items-center gap-1">
             <button
-              onClick={() => setSaved(!saved)}
+              onClick={() => job && toggleSave(job.id)}
               className={`p-2 rounded-full transition hover:bg-slate-100 dark:hover:bg-slate-800 ${saved ? "text-blue-600" : "text-slate-400"}`}
               title="Save"
             >
@@ -137,7 +139,7 @@ const SingleJobDetailPage = () => {
                     selectedJob?.id === j.id ? "ring-blue-500" : "ring-transparent hover:ring-slate-200"
                   }`}
                 >
-                  <JobCard job={j} />
+                  <JobCard job={j} onToggleSave={() => toggleSave(j.id)} />
                 </div>
               ))
             )}

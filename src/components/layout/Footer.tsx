@@ -5,7 +5,7 @@ import NewsletterForm from "../ui/NewsletterForm";
 const Footer = () => {
   return (
     <>
-      <section className="bg-blue-500 dark:bg-slate-800 max-w-7xl mx-auto xl:rounded-2xl py-16 px-8 flex flex-col lg:flex-row items-center justify-between gap-10 transition-colors duration-200">
+      <section className="bg-blue-500 dark:bg-slate-800 max-w-7xl mx-auto xl:rounded-2xl my-10 py-16 px-8 flex flex-col lg:flex-row items-center justify-between gap-10 transition-colors duration-200">
         <div className="max-w-2xl text-center lg:text-left">
           <p className="inline-block bg-white dark:bg-slate-700 dark:text-slate-200 px-4 py-2 rounded-full mb-6 text-sm font-medium">
             <FontAwesomeIcon icon="magnifying-glass" className="mr-2" />

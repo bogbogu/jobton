@@ -1,6 +1,12 @@
 import { mainFetch } from "../api/mainFetch";
 import { mainPost } from "../api/mainPost";
-import type { AuthSuccessResult, AuthUser, LoginPayload, RegisterPayload } from "../types/auth-type";
+import type {
+  AuthSuccessResult,
+  AuthUser,
+  LoginPayload,
+  RegisterPayload,
+  RegisterResult,
+} from "../types/auth-type";
 
 type ApiPayload = Record<string, unknown>;
 
@@ -46,7 +52,7 @@ const extractUser = (payload: unknown): AuthUser | null => {
   return null;
 };
 
-const normalizeAuthResult = (payload: unknown): AuthSuccessResult => {
+const normalizeLoginResult = (payload: unknown): AuthSuccessResult => {
   const token = extractToken(payload);
 
   if (!token) {
@@ -59,6 +65,11 @@ const normalizeAuthResult = (payload: unknown): AuthSuccessResult => {
   };
 };
 
+const normalizeRegisterResult = (payload: unknown): RegisterResult => ({
+  token: extractToken(payload),
+  user: extractUser(payload),
+});
+
 export const authService = {
   register: async (payload: RegisterPayload) => {
     const data = await mainPost<ApiPayload, RegisterPayload>(
@@ -68,7 +79,7 @@ export const authService = {
       "Registration failed. Please try again."
     );
 
-    return normalizeAuthResult(data);
+    return normalizeRegisterResult(data);
   },
 
   login: async (payload: LoginPayload) => {
@@ -79,7 +90,7 @@ export const authService = {
       "Login failed. Please check your credentials."
     );
 
-    return normalizeAuthResult(data);
+    return normalizeLoginResult(data);
   },
 
   getCurrentUser: async () => {

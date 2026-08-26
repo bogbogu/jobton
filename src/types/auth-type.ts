@@ -24,6 +24,11 @@ export interface AuthSuccessResult {
   user: AuthUser | null;
 }
 
+export interface RegisterResult {
+  token: string | null;
+  user: AuthUser | null;
+}
+
 export interface AuthContextValue {
   user: AuthUser | null;
   token: string | null;

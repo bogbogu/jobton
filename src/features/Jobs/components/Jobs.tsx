@@ -13,17 +13,20 @@ import { useNavigate } from "react-router-dom";
 import JobCard from "../../../components/ui/JobCard";
 import JobDetail from "./JobDetail";
 import { useJobsPageService } from "../services/useJobsPageService";
-import { jobTypeOptions, industryOptions, sortOptions, reportReasonOptions } from "../../../constants/fieldsKeyValues";
+import { jobTypeOptions, industryOptions, categoryOptions, sortOptions, reportReasonOptions } from "../../../constants/fieldsKeyValues";
 
 const Jobs = () => {
   const navigate = useNavigate();
 
   const {
     filteredJobs,
+    isLoading,
+    error,
     keyword, setKeyword,
     location, setLocation,
     selectedType, setSelectedType,
     selectedIndustry, setSelectedIndustry,
+    selectedCategory, setSelectedCategory,
     sortBy, setSortBy,
     showSort, setShowSort,
     showMobileFilters, setShowMobileFilters,
@@ -34,6 +37,7 @@ const Jobs = () => {
     handleReset,
     handleCardClick,
     handleSave,
+    toggleSave,
     handleShare,
     handleOpenReportModal,
     handleCloseReportModal,
@@ -110,6 +114,14 @@ const Jobs = () => {
             <option value="">Industry ▾</option>
             {industryOptions.map((i) => <option key={i.key} value={i.value}>{i.value}</option>)}
           </select>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="text-sm border border-slate-200 dark:border-slate-600 rounded-full px-4 py-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 cursor-pointer outline-none"
+          >
+            <option value="">Category ▾</option>
+            {categoryOptions.map((c) => <option key={c.key} value={c.value}>{c.value}</option>)}
+          </select>
           {isFiltered && (
             <button onClick={handleReset} className="text-sm text-blue-600 font-medium hover:underline ml-1">
               Reset
@@ -155,6 +167,14 @@ const Jobs = () => {
             >
               <option value="">All Industries</option>
               {industryOptions.map((i) => <option key={i.key} value={i.value}>{i.value}</option>)}
+            </select>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 outline-none"
+            >
+              <option value="">All Categories</option>
+              {categoryOptions.map((c) => <option key={c.key} value={c.value}>{c.value}</option>)}
             </select>
             {isFiltered && (
               <button onClick={handleReset} className="text-sm text-blue-600 font-medium self-start hover:underline">
@@ -254,7 +274,13 @@ const Jobs = () => {
           {/* Left — job list */}
           <div className="w-full md:w-5/12 flex flex-col gap-3">
             {filteredJobs.length === 0 ? (
-              <p className="text-sm text-slate-400 py-16 text-center">No jobs found. Try a different search.</p>
+              <p className="text-sm text-slate-400 py-16 text-center">
+                {isLoading
+                  ? "Loading jobs..."
+                  : error
+                  ? error
+                  : "No jobs found. Try a different search."}
+              </p>
             ) : (
               filteredJobs.map((job) => (
                 <div
@@ -266,7 +292,7 @@ const Jobs = () => {
                       : "ring-transparent hover:ring-slate-200"
                   }`}
                 >
-                  <JobCard job={job} />
+                  <JobCard job={job} onToggleSave={() => toggleSave(job.id)} />
                 </div>
               ))
             )}

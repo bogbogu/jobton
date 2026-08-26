@@ -18,9 +18,11 @@ const HireFreelancers = () => {
     selectedFreelancer,
     selectedFreelancerId,
     setSelectedFreelancerId,
+    isLoading,
+    error,
   } = useFreelancersService();
 
-  const handleFreelancerSelect = (id: number) => {
+  const handleFreelancerSelect = (id: string) => {
     setSelectedFreelancerId(id);
     if (window.innerWidth < 1024) {
       navigate(`/hire-freelancers/${id}`);
@@ -84,7 +86,11 @@ const HireFreelancers = () => {
 
               {filteredFreelancers.length === 0 && (
                 <div className="rounded-2xl border border-dashed border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 p-8 text-center text-slate-500 dark:text-slate-400">
-                  No freelancers match your search right now.
+                  {isLoading
+                    ? "Loading freelancers..."
+                    : error
+                    ? error
+                    : "No freelancers match your search right now."}
                 </div>
               )}
             </div>
