@@ -1,12 +1,15 @@
 export interface Job {
-  id: number;
+  id: string;
   company: string;
+  companySlug?: string;
   domain: string;
   logo_url?: string | null;
   title: string;
   location: string;
   type: string;
+  workArrangement?: "On-site" | "Remote" | "Hybrid" | null;
   salary: string;
+  category?: string;
   status: string[];
   skills: string[];
   posted: string;
@@ -18,4 +21,5 @@ export interface Job {
   qualification: string;
   description: string;
   responsibilities: string[];
+  applicationLink?: string;
 }

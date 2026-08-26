@@ -1,16 +1,27 @@
+import { Link } from "react-router-dom";
 import { MapPin, BriefcaseBusiness, Bookmark} from "lucide-react";
 // import { ThumbsDown } from "lucide-react";
 import CompanyLogo from "../CompanyLogo";
-import { useState } from "react";
 
 const statusStyles: Record<string, string> = {
   featured: "bg-amber-100 text-amber-700",
   verified: "bg-green-100 text-green-700",
   urgent: "bg-red-100 text-red-700",
+  new: "bg-blue-100 text-blue-700",
 };
 
-const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; className?: string }) => {
-  const [saved, setSaved] = useState(job.saved ?? false);
+const JobCard = ({
+  job,
+  onClick,
+  onToggleSave,
+  className,
+}: {
+  job: any;
+  onClick?: () => void;
+  onToggleSave?: () => void;
+  className?: string;
+}) => {
+  const saved = job.saved ?? false;
   // const [reported, setReported] = useState(false);
   return (
     <div onClick={onClick} className={`rounded-3xl bg-white dark:bg-slate-800 p-7 cursor-pointer ${className ?? ""}`}>
@@ -25,13 +36,24 @@ const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; 
 
           <div>
             <p className="font-bold text-base dark:text-white">{job.title}</p>
-            <p className="text-slate-500 dark:text-slate-400">{job.company}</p>
+            {job.companySlug ? (
+              <Link
+                to={`/companies/${job.companySlug}`}
+                onClick={(e) => e.stopPropagation()}
+                className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+              >
+                {job.company}
+              </Link>
+            ) : (
+              <p className="text-slate-500 dark:text-slate-400">{job.company}</p>
+            )}
           </div>
         </div>
 
         <div className="flex flex-col items-center">
           <button
-            onClick={(e) => { e.stopPropagation(); setSaved(!saved); }}
+            onClick={(e) => { e.stopPropagation(); onToggleSave?.(); }}
+            aria-label={saved ? "Unsave job" : "Save job"}
             className="rounded-full p-2 transition hover:bg-slate-100 dark:hover:bg-slate-700"
           >
             <Bookmark
@@ -61,7 +83,7 @@ const JobCard = ({ job, onClick, className }: { job: any; onClick?: () => void; 
         {job.status.map((item: string) => (
           <span
             key={item}
-            className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${statusStyles[item]}`}
+            className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${statusStyles[item] ?? "bg-slate-100 text-slate-700"}`}
           >
             {item}
           </span>

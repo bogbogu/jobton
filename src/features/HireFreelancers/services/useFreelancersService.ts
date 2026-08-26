@@ -1,17 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
-import { freelancers } from "../../../constants/freelancers";
+import { useFreelancers } from "../../../hooks/useFreelancers";
 
 export const useFreelancersService = () => {
+  const { freelancers, isLoading, error } = useFreelancers();
+
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
-  const [selectedFreelancerId, setSelectedFreelancerId] = useState<number | null>(
-    freelancers[0]?.id ?? null
-  );
+  const [selectedFreelancerId, setSelectedFreelancerId] = useState<string | null>(null);
 
   const categories = useMemo(() => {
     const values = Array.from(new Set(freelancers.map((freelancer) => freelancer.category)));
     return ["All", ...values];
-  }, []);
+  }, [freelancers]);
 
   const filteredFreelancers = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -27,7 +27,7 @@ export const useFreelancersService = () => {
 
       return matchesCategory && matchesQuery;
     });
-  }, [category, query]);
+  }, [freelancers, category, query]);
 
   useEffect(() => {
     if (filteredFreelancers.length === 0) {
@@ -59,5 +59,7 @@ export const useFreelancersService = () => {
     selectedFreelancer,
     selectedFreelancerId,
     setSelectedFreelancerId,
+    isLoading,
+    error,
   };
 };

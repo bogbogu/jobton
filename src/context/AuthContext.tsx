@@ -144,15 +144,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setAuthError(null);
 
       try {
-        const result = await authService.register(payload);
+        await authService.register(payload);
 
-        if (result.user) {
-          applySession(result.token, result.user);
-        } else {
-          applySession(result.token, null);
-          const currentUser = await authService.getCurrentUser();
-          setUser(currentUser);
-        }
+        // Registration does not create an authenticated session in this flow.
+        localAuthTokenStorage.clearToken();
+        setToken(null);
+        setUser(null);
       } catch (error) {
         const message = error instanceof Error ? error.message : "Unable to register.";
         setAuthError(message);
@@ -161,7 +158,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setIsAuthLoading(false);
       }
     },
-    [applySession]
+    []
   );
 
   const value = useMemo(

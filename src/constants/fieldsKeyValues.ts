@@ -24,6 +24,32 @@ export const industryOptions = [
   { key: "CONSULTING", value: "Consulting" },
 ];
 
+// Keep in sync with the category titles in src/hooks/useCategories.ts
+// (CATEGORY_ICONS) — that's the taxonomy category cards link into via
+// /jobs?category=<title>, so the filter dropdown here needs to offer the
+// exact same values for "select from dropdown" and "click a card" to land
+// on the same results.
+export const categoryOptions = [
+  { key: "TECHNOLOGY", value: "Technology" },
+  { key: "MARKETING", value: "Marketing" },
+  { key: "SALES", value: "Sales" },
+  { key: "CUSTOMER_SERVICE", value: "Customer Service" },
+  { key: "FINANCE", value: "Finance" },
+  { key: "HEALTHCARE", value: "Healthcare" },
+  { key: "SOFTWARE_DEVELOPMENT", value: "Software Development" },
+  { key: "DESIGN", value: "Design" },
+  { key: "ECOMMERCE", value: "E-commerce" },
+  { key: "EDUCATION", value: "Education" },
+  { key: "CYBERSECURITY", value: "Cybersecurity" },
+  { key: "PUBLIC_SECTOR", value: "Public Sector" },
+  { key: "ENGINEERING", value: "Engineering" },
+  { key: "TRAVEL_HOSPITALITY", value: "Travel & Hospitality" },
+  { key: "REAL_ESTATE", value: "Real Estate" },
+  { key: "LEGAL", value: "Legal" },
+  { key: "LOGISTICS", value: "Logistics" },
+  { key: "CREATIVE_MEDIA", value: "Creative Media" },
+];
+
 export const sortOptions = [
   { key: "MOST_RECENT", value: "Most Recent" },
   { key: "OLDEST", value: "Oldest" },

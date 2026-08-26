@@ -4,11 +4,11 @@ import { ArrowRight } from "lucide-react";
 import { useJobs } from "../../../hooks/useJobs";
 
 const FeaturedJobs = () => {
-  const { jobs } = useJobs();
+  const { jobs, toggleSave } = useJobs();
   const navigate = useNavigate();
   const featuredJobs = jobs.slice(0, 6);
 
-  const handleFeaturedJobClick = (jobId: number) => {
+  const handleFeaturedJobClick = (jobId: string) => {
     if (window.innerWidth < 768) {
       navigate(`/jobs/${jobId}`);
       return;
@@ -65,6 +65,7 @@ const FeaturedJobs = () => {
               key={job.id}
               job={job}
               onClick={() => handleFeaturedJobClick(job.id)}
+              onToggleSave={() => toggleSave(job.id)}
               className="shadow-sm transition hover:shadow-xl border border-slate-200 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-500"
             />
           ))}

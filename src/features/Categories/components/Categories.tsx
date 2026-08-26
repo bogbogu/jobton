@@ -4,7 +4,7 @@ import PopularCategoriesCard from "../../../components/ui/cards/PopularCategorie
 import { useCategories } from "../../../hooks/useCategories";
 
 const Categories = () => {
-  const { categories } = useCategories();
+  const { categories, error } = useCategories();
 
   return (
     <section className="bg-slate-50 dark:bg-slate-900 py-14 transition-colors duration-200 min-h-screen">
@@ -32,7 +32,7 @@ const Categories = () => {
 
           <div className="mb-6">
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Showing {categories.length} categories
+              {error ? error : `Showing ${categories.length} categories`}
             </p>
           </div>
 

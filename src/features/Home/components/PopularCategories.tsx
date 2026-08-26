@@ -4,7 +4,7 @@ import { useCategories } from "../../../hooks/useCategories";
 import { ArrowRight } from "lucide-react";
 
 const PopularCategories = () => {
-  const { categories } = useCategories();
+  const { categories, error } = useCategories();
   const popularCategories = categories.slice(0, 6);
 
   return (
@@ -52,6 +52,12 @@ const PopularCategories = () => {
 
 
 
+
+        {error && (
+          <p className="mb-4 text-sm text-slate-400 dark:text-slate-500">
+            Job counts couldn't be loaded right now.
+          </p>
+        )}
 
         <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-6">
           {popularCategories.map((category) => (

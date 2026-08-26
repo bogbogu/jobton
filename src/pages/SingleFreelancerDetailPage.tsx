@@ -2,15 +2,16 @@ import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import FreelancerDetailsPanel from "../features/HireFreelancers/components/FreelancerDetailsPanel";
-import { freelancers } from "../constants/freelancers";
+import { useFreelancers } from "../hooks/useFreelancers";
 
 const SingleFreelancerDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { freelancers, isLoading } = useFreelancers();
 
   const freelancer = useMemo(
-    () => freelancers.find((item) => item.id === Number(id)) ?? null,
-    [id]
+    () => freelancers.find((item) => item.id === id) ?? null,
+    [freelancers, id]
   );
 
   if (!freelancer) {
@@ -25,7 +26,9 @@ const SingleFreelancerDetailPage = () => {
             <ArrowLeft size={16} />
             Back to Freelancers
           </button>
-          <p className="mt-6 text-slate-500 dark:text-slate-400">Freelancer profile not found.</p>
+          <p className="mt-6 text-slate-500 dark:text-slate-400">
+            {isLoading ? "Loading freelancer profile..." : "Freelancer profile not found."}
+          </p>
         </div>
       </section>
     );

@@ -11,7 +11,7 @@ export interface FreelancerHandle {
 }
 
 export interface FreelancerProfile {
-  id: number;
+  id: string;
   name: string;
   role: string;
   category: string;

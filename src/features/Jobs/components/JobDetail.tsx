@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   MapPin,
   Briefcase,
@@ -29,7 +30,16 @@ const JobDetail = ({ job }: { job: Job }) => {
         />
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-semibold text-slate-700 dark:text-slate-300">{job.company}</p>
+            {job.companySlug ? (
+              <Link
+                to={`/companies/${job.companySlug}`}
+                className="font-semibold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition"
+              >
+                {job.company}
+              </Link>
+            ) : (
+              <p className="font-semibold text-slate-700 dark:text-slate-300">{job.company}</p>
+            )}
             {job.status.includes("verified") && (
               <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">
                 Verified Employer
@@ -66,9 +76,14 @@ const JobDetail = ({ job }: { job: Job }) => {
       </div>
 
       {/* Apply button */}
-      <button className="mt-5 inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition">
+      <a
+        href={job.applicationLink || "#"}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-5 inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition"
+      >
         Apply Now <ExternalLink size={14} />
-      </button>
+      </a>
 
       {/* Tabs */}
       <div className="mt-8 border-b border-slate-200 dark:border-slate-700">
