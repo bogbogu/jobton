@@ -4,8 +4,8 @@ export const contactChannels = [
   {
     icon: Mail,
     title: "Email us",
-    description: "info@jobton.com",
-    href: "mailto:info@jobton.com",
+    description: "info@jobton.com.ng",
+    href: "mailto:info@jobton.com.ng",
   },
   {
     icon: Phone,
@@ -17,13 +17,13 @@ export const contactChannels = [
   {
     icon: Flag,
     title: "Report a scam job",
-    description: "report@jobton.com",
-    href: "mailto:report@jobton.com",
+    description: "report@jobton.com.ng",
+    href: "mailto:report@jobton.com.ng",
   },
   {
     icon: Handshake,
     title: "Partnerships",
-    description: "partnerships@jobton.com",
-    href: "mailto:partnerships@jobton.com",
+    description: "partnerships@jobton.com.ng",
+    href: "mailto:partnerships@jobton.com.ng",
   },
 ];
