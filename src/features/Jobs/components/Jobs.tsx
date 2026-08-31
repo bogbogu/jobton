@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import JobCard from "../../../components/ui/JobCard";
+import FilterSelect from "../../../components/ui/FilterSelect";
 import JobDetail from "./JobDetail";
 import { useJobsPageService } from "../services/useJobsPageService";
 import { jobTypeOptions, industryOptions, categoryOptions, sortOptions, reportReasonOptions } from "../../../constants/fieldsKeyValues";
@@ -98,30 +99,30 @@ const Jobs = () => {
 
         {/* Filters — desktop */}
         <div className="hidden md:flex flex-wrap items-center gap-2 mb-6">
-          <select
+          <FilterSelect
             value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-            className="text-sm border border-slate-200 dark:border-slate-600 rounded-full px-4 py-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 cursor-pointer outline-none"
-          >
-            <option value="">Job Type ▾</option>
-            {jobTypeOptions.map((t) => <option key={t.key} value={t.value}>{t.value}</option>)}
-          </select>
-          <select
+            onChange={setSelectedType}
+            placeholderLabel="Job Type"
+            options={jobTypeOptions}
+            clearAriaLabel="Clear job type filter"
+            selectClassName="text-sm border border-slate-200 dark:border-slate-600 rounded-full pl-4 py-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 cursor-pointer outline-none"
+          />
+          <FilterSelect
             value={selectedIndustry}
-            onChange={(e) => setSelectedIndustry(e.target.value)}
-            className="text-sm border border-slate-200 dark:border-slate-600 rounded-full px-4 py-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 cursor-pointer outline-none"
-          >
-            <option value="">Industry ▾</option>
-            {industryOptions.map((i) => <option key={i.key} value={i.value}>{i.value}</option>)}
-          </select>
-          <select
+            onChange={setSelectedIndustry}
+            placeholderLabel="Industry"
+            options={industryOptions}
+            clearAriaLabel="Clear industry filter"
+            selectClassName="text-sm border border-slate-200 dark:border-slate-600 rounded-full pl-4 py-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 cursor-pointer outline-none"
+          />
+          <FilterSelect
             value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-sm border border-slate-200 dark:border-slate-600 rounded-full px-4 py-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 cursor-pointer outline-none"
-          >
-            <option value="">Category ▾</option>
-            {categoryOptions.map((c) => <option key={c.key} value={c.value}>{c.value}</option>)}
-          </select>
+            onChange={setSelectedCategory}
+            placeholderLabel="Category"
+            options={categoryOptions}
+            clearAriaLabel="Clear category filter"
+            selectClassName="text-sm border border-slate-200 dark:border-slate-600 rounded-full pl-4 py-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 cursor-pointer outline-none"
+          />
           {isFiltered && (
             <button onClick={handleReset} className="text-sm text-blue-600 font-medium hover:underline ml-1">
               Reset
@@ -152,30 +153,33 @@ const Jobs = () => {
         {/* Mobile filter panel */}
         {showMobileFilters && (
           <div className="md:hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 mb-4 flex flex-col gap-3">
-            <select
+            <FilterSelect
               value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 outline-none"
-            >
-              <option value="">All Job Types</option>
-              {jobTypeOptions.map((t) => <option key={t.key} value={t.value}>{t.value}</option>)}
-            </select>
-            <select
+              onChange={setSelectedType}
+              placeholderLabel="All Job Types"
+              options={jobTypeOptions}
+              clearAriaLabel="Clear job type filter"
+              fullWidth
+              selectClassName="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-xl pl-4 py-2.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 outline-none"
+            />
+            <FilterSelect
               value={selectedIndustry}
-              onChange={(e) => setSelectedIndustry(e.target.value)}
-              className="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 outline-none"
-            >
-              <option value="">All Industries</option>
-              {industryOptions.map((i) => <option key={i.key} value={i.value}>{i.value}</option>)}
-            </select>
-            <select
+              onChange={setSelectedIndustry}
+              placeholderLabel="All Industries"
+              options={industryOptions}
+              clearAriaLabel="Clear industry filter"
+              fullWidth
+              selectClassName="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-xl pl-4 py-2.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 outline-none"
+            />
+            <FilterSelect
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-2.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 outline-none"
-            >
-              <option value="">All Categories</option>
-              {categoryOptions.map((c) => <option key={c.key} value={c.value}>{c.value}</option>)}
-            </select>
+              onChange={setSelectedCategory}
+              placeholderLabel="All Categories"
+              options={categoryOptions}
+              clearAriaLabel="Clear category filter"
+              fullWidth
+              selectClassName="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-xl pl-4 py-2.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 outline-none"
+            />
             {isFiltered && (
               <button onClick={handleReset} className="text-sm text-blue-600 font-medium self-start hover:underline">
                 Reset filters
