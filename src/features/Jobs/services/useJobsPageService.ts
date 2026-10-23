@@ -58,13 +58,13 @@ export const useJobsPageService = () => {
       result = result.filter(
         (j) =>
           j.title.toLowerCase().includes(kw) ||
-          j.company.toLowerCase().includes(kw) ||
+          (j.company ?? "").toLowerCase().includes(kw) ||
           j.skills.some((s) => s.toLowerCase().includes(kw))
       );
     }
     if (activeLocation)
       result = result.filter((j) =>
-        j.location.toLowerCase().includes(activeLocation.toLowerCase())
+        (j.location ?? "").toLowerCase().includes(activeLocation.toLowerCase())
       );
     // The Job Type dropdown mixes employment type ("Full Time", "Contract")
     // and work arrangement ("On-site", "Remote", "Hybrid") into one list

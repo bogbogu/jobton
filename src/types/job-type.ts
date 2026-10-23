@@ -1,12 +1,12 @@
 export interface Job {
   id: string;
-  company: string;
+  company?: string; // missing on some ingested jobs
   companySlug?: string;
-  domain: string;
+  domain?: string;
   logo_url?: string | null;
   title: string;
-  location: string;
-  type: string;
+  location?: string;
+  type?: string;
   workArrangement?: "On-site" | "Remote" | "Hybrid" | null;
   salary: string;
   category?: string;
