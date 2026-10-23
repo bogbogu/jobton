@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import type { Job } from "../../../types/job-type";
 import CompanyLogo from "../../../components/CompanyLogo";
+import { companyName, companyPageSlug } from "../../../utils/jobDisplay";
 
 const TABS = ["Overview", "About Company", "Requirements", "Benefits"];
 
@@ -30,15 +31,15 @@ const JobDetail = ({ job }: { job: Job }) => {
         />
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            {job.companySlug ? (
+            {companyPageSlug(job) ? (
               <Link
-                to={`/companies/${job.companySlug}`}
+                to={`/companies/${companyPageSlug(job)}`}
                 className="font-semibold text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition"
               >
-                {job.company}
+                {companyName(job)}
               </Link>
             ) : (
-              <p className="font-semibold text-slate-700 dark:text-slate-300">{job.company}</p>
+              <p className="font-semibold text-slate-700 dark:text-slate-300">{companyName(job)}</p>
             )}
             {job.status.includes("verified") && (
               <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">
@@ -54,11 +55,11 @@ const JobDetail = ({ job }: { job: Job }) => {
       <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-500 dark:text-slate-400">
         <span className="flex items-center gap-1.5">
           <MapPin size={15} />
-          {job.location}
+          {job.location ?? "Location not specified"}
         </span>
         <span className="flex items-center gap-1.5">
           <Briefcase size={15} />
-          {job.type}
+          {job.type ?? "Job type not specified"}
         </span>
         <span className="flex items-center gap-1.5 font-semibold text-slate-800 dark:text-slate-100">
           {job.salary}
@@ -76,7 +77,8 @@ const JobDetail = ({ job }: { job: Job }) => {
       </div>
 
       {/* Apply button */}
-      <a
+      {job.applicationLink ? (
+<a
         href={job.applicationLink || "#"}
         target="_blank"
         rel="noreferrer"
@@ -84,6 +86,11 @@ const JobDetail = ({ job }: { job: Job }) => {
       >
         Apply Now <ExternalLink size={14} />
       </a>
+      ) : (
+        <p className="mt-5 text-sm text-slate-500 dark:text-slate-400">
+          Application details were not provided for this job.
+        </p>
+      )}
 
       {/* Tabs */}
       <div className="mt-8 border-b border-slate-200 dark:border-slate-700">
@@ -125,7 +132,7 @@ const JobDetail = ({ job }: { job: Job }) => {
                 </div>
                 <div>
                   <p className="text-xs text-slate-400">Location</p>
-                  <p className="text-sm font-medium dark:text-slate-200">{job.location}</p>
+                  <p className="text-sm font-medium dark:text-slate-200">{job.location ?? "Location not specified"}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -143,7 +150,7 @@ const JobDetail = ({ job }: { job: Job }) => {
                 </div>
                 <div>
                   <p className="text-xs text-slate-400">Employment Type</p>
-                  <p className="text-sm font-medium dark:text-slate-200">{job.type}</p>
+                  <p className="text-sm font-medium dark:text-slate-200">{job.type ?? "Job type not specified"}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
