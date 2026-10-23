@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { MapPin, BriefcaseBusiness, Bookmark} from "lucide-react";
 // import { ThumbsDown } from "lucide-react";
 import CompanyLogo from "../CompanyLogo";
+import { companyName, companyPageSlug } from "../../utils/jobDisplay";
 
 const statusStyles: Record<string, string> = {
   featured: "bg-amber-100 text-amber-700",
@@ -36,16 +37,16 @@ const JobCard = ({
 
           <div>
             <p className="font-bold text-base dark:text-white">{job.title}</p>
-            {job.companySlug ? (
+            {companyPageSlug(job) ? (
               <Link
-                to={`/companies/${job.companySlug}`}
+                to={`/companies/${companyPageSlug(job)}`}
                 onClick={(e) => e.stopPropagation()}
                 className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
               >
-                {job.company}
+                {companyName(job)}
               </Link>
             ) : (
-              <p className="text-slate-500 dark:text-slate-400">{job.company}</p>
+              <p className="text-slate-500 dark:text-slate-400">{companyName(job)}</p>
             )}
           </div>
         </div>
@@ -93,12 +94,12 @@ const JobCard = ({
       <div className="mt-5 flex flex-wrap gap-5 text-sm text-slate-500">
         <span className="flex items-center gap-2 dark:text-slate-400">
           <MapPin size={16} />
-          {job.location}
+          {job.location ?? "Location not specified"}
         </span>
 
         <span className="flex items-center gap-2 dark:text-slate-400">
           <BriefcaseBusiness size={16} />
-          {job.type}
+          {job.type ?? "Job type not specified"}
         </span>
       </div>
 
