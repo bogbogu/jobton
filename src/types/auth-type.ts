@@ -4,6 +4,7 @@ export interface AuthUser {
   firstName?: string;
   lastName?: string;
   email: string;
+  role?: string;
   [key: string]: unknown;
 }
 
