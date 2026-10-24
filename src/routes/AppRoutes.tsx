@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Homepage from "../pages/Homepage";
 import ContactUs from "../pages/ContactUs";
 import MainLayout from "../components/layout/MainLayout";
@@ -18,6 +18,11 @@ import ResetPasswordPage from "../pages/auth/ResetPassword";
 import VerifyEmailPage from "../pages/auth/VerifyEmail";
 import ProtectedRoute from "./ProtectedRoute";
 import AuthLayout from "../layouts/AuthLayout";
+import AdminRoute from "./AdminRoute";
+import AdminLayout from "../features/Admin/components/AdminLayout";
+import AdminJobsPage from "../pages/admin/AdminJobsPage";
+import AdminJobReviewPage from "../pages/admin/AdminJobReviewPage";
+import AdminChannelsPage from "../pages/admin/AdminChannelsPage";
 
 const AppRoutes = () => {
   return (
@@ -35,6 +40,14 @@ const AppRoutes = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/hire-freelancers" element={<HireFreelancersPage />} />
             <Route path="/hire-freelancers/:id" element={<SingleFreelancerDetailPage />} />
+          </Route>
+          <Route path="/admin" element={<AdminRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<Navigate to="/admin/jobs" replace />} />
+              <Route path="jobs" element={<AdminJobsPage />} />
+              <Route path="jobs/:id" element={<AdminJobReviewPage />} />
+              <Route path="channels" element={<AdminChannelsPage />} />
+            </Route>
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
