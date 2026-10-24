@@ -1,12 +1,12 @@
 export interface Job {
   id: string;
-  company?: string; // missing on some ingested jobs
+  company?: string | null; // missing/null on some ingested jobs
   companySlug?: string;
-  domain?: string;
+  domain?: string | null;
   logo_url?: string | null;
   title: string;
-  location?: string;
-  type?: string;
+  location?: string | null;
+  type?: string | null;
   workArrangement?: "On-site" | "Remote" | "Hybrid" | null;
   salary: string;
   category?: string;
@@ -21,5 +21,12 @@ export interface Job {
   qualification: string;
   description: string;
   responsibilities: string[];
-  applicationLink?: string;
+  applicationLink?: string | null;
+  applyEmail?: string | null;
+  applyPhone?: string | null;
+  source?: {
+    kind?: string | null;
+    channel?: string | null;
+    url?: string | null;
+  } | null;
 }

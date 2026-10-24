@@ -16,6 +16,8 @@ const SHOW_AUTH_NAV = false;
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, isAuthLoading, isAuthenticated, logout } = useAuth();
+  const isAdmin = isAuthenticated && user?.role === "admin";
+  const visibleLinks = isAdmin ? [...navLinks, { label: "Admin", to: "/admin" }] : navLinks;
   const [isDark, setIsDark] = useState(
     () => document.documentElement.classList.contains("dark")
   );
@@ -59,7 +61,7 @@ const Navbar = () => {
 
         {/* Desktop nav links */}
         <ul className="hidden md:flex items-center gap-7 text-sm font-medium">
-          {navLinks.map((link) => (
+          {visibleLinks.map((link) => (
             <li key={link.to}>
               <NavLink
                 to={link.to}
@@ -160,7 +162,7 @@ const Navbar = () => {
           />
 
           <div className="fixed left-0 right-0 top-16 z-[90] max-h-[calc(100dvh-4rem)] overflow-y-auto md:hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-4 pb-5 pt-3 flex flex-col gap-1 shadow-xl">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
