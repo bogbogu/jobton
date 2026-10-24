@@ -179,7 +179,7 @@ const RawPostPanel = ({ job, rawPost }: { job: AdminJob; rawPost: RawPost | null
 
       {rawPost ? (
         <>
-          <pre className="max-h-[28rem] overflow-auto whitespace-pre-wrap break-words rounded-lg bg-slate-50 p-3 font-sans text-sm text-slate-800 dark:bg-slate-950 dark:text-slate-200">
+          <pre className="max-h-[28rem] overflow-auto whitespace-pre-wrap break-words [overflow-wrap:anywhere] rounded-lg bg-slate-50 p-3 font-sans text-sm text-slate-800 dark:bg-slate-950 dark:text-slate-200">
             {rawPost.text}
           </pre>
 
@@ -272,7 +272,7 @@ const AdminJobReview = () => {
   const otherBadges = JOB_BADGES.filter((badge) => badge !== "verified");
 
   return (
-    <div className="space-y-5">
+    <div className="min-w-0 space-y-5">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
           <Link
@@ -310,8 +310,8 @@ const AdminJobReview = () => {
         </NoticeBanner>
       )}
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        <div className="space-y-5">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <div className="min-w-0 space-y-5">
           <RawPostPanel job={job} rawPost={rawPost} />
 
           <section aria-labelledby="extraction-heading" className={`${cardClasses} space-y-4`}>
