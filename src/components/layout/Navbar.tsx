@@ -60,7 +60,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop nav links */}
-        <ul className="hidden md:flex items-center gap-7 text-sm font-medium">
+        <ul className="hidden lg:flex items-center gap-7 text-sm font-medium">
           {visibleLinks.map((link) => (
             <li key={link.to}>
               <NavLink
@@ -77,7 +77,7 @@ const Navbar = () => {
         </ul>
 
         {/* Desktop right actions */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden lg:flex items-center gap-3">
           {isAuthLoading ? (
             <span className="text-sm text-slate-500 dark:text-slate-400">Checking session...</span>
           ) : isAuthenticated ? (
@@ -143,7 +143,7 @@ const Navbar = () => {
 
         {/* Mobile: hamburger */}
         <button
-          className="md:hidden p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+          className="lg:hidden p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
@@ -158,10 +158,10 @@ const Navbar = () => {
             type="button"
             aria-label="Close menu"
             onClick={() => setMenuOpen(false)}
-            className="fixed inset-0 top-16 z-[80] bg-slate-900/20 backdrop-blur-[1px] md:hidden"
+            className="fixed inset-0 top-16 z-[80] bg-slate-900/20 backdrop-blur-[1px] lg:hidden"
           />
 
-          <div className="fixed left-0 right-0 top-16 z-[90] max-h-[calc(100dvh-4rem)] overflow-y-auto md:hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-4 pb-5 pt-3 flex flex-col gap-1 shadow-xl">
+          <div className="fixed left-0 right-0 top-16 z-[90] max-h-[calc(100dvh-4rem)] overflow-y-auto lg:hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-4 pb-5 pt-3 flex flex-col gap-1 shadow-xl">
             {visibleLinks.map((link) => (
               <NavLink
                 key={link.to}
