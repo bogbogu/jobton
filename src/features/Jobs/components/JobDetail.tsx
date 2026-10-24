@@ -12,7 +12,7 @@ import {
 import type { Job } from "../../../types/job-type";
 import CompanyLogo from "../../../components/CompanyLogo";
 import ApplyContacts from "../../../components/ApplyContacts";
-import { companyName, companyPageSlug, safeHttpUrl } from "../../../utils/jobDisplay";
+import { companyName, companyPageSlug, jobLogoDomain, safeHttpUrl } from "../../../utils/jobDisplay";
 
 const TABS = ["Overview", "About Company", "Requirements", "Benefits"];
 
@@ -28,7 +28,7 @@ const JobDetail = ({ job }: { job: Job }) => {
         <CompanyLogo
           key={job.id}
           company={job.company ?? undefined}
-          domain={job.domain ?? undefined}
+          domain={jobLogoDomain(job)}
           logoUrl={job.logo_url}
         />
         <div>

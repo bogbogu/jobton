@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { MapPin, BriefcaseBusiness, Bookmark} from "lucide-react";
 // import { ThumbsDown } from "lucide-react";
 import CompanyLogo from "../CompanyLogo";
-import { companyName, companyPageSlug } from "../../utils/jobDisplay";
+import { companyName, companyPageSlug, jobLogoDomain } from "../../utils/jobDisplay";
 
 const statusStyles: Record<string, string> = {
   featured: "bg-amber-100 text-amber-700",
@@ -31,7 +31,7 @@ const JobCard = ({
           <CompanyLogo
             key={job.id}
             company={job.company}
-            domain={job.domain}
+            domain={jobLogoDomain(job)}
             logoUrl={job.logo_url}
           />
 
