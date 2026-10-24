@@ -8,16 +8,18 @@ import {
   Building2,
   GraduationCap,
   CheckCircle2,
-  ExternalLink,
 } from "lucide-react";
 import type { Job } from "../../../types/job-type";
 import CompanyLogo from "../../../components/CompanyLogo";
-import { companyName, companyPageSlug } from "../../../utils/jobDisplay";
+import ApplyContacts from "../../../components/ApplyContacts";
+import { companyName, companyPageSlug, safeHttpUrl } from "../../../utils/jobDisplay";
 
 const TABS = ["Overview", "About Company", "Requirements", "Benefits"];
 
 const JobDetail = ({ job }: { job: Job }) => {
   const [activeTab, setActiveTab] = useState("Overview");
+  const telegramChannel = job.source?.channel?.trim().replace(/^@+/, "") ?? "";
+  const telegramUrl = safeHttpUrl(job.source?.url);
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 md:p-8 shadow-sm transition-colors duration-200">
@@ -25,8 +27,8 @@ const JobDetail = ({ job }: { job: Job }) => {
       <div className="flex items-start gap-4">
         <CompanyLogo
           key={job.id}
-          company={job.company}
-          domain={job.domain}
+          company={job.company ?? undefined}
+          domain={job.domain ?? undefined}
           logoUrl={job.logo_url}
         />
         <div>
@@ -67,7 +69,7 @@ const JobDetail = ({ job }: { job: Job }) => {
       </div>
 
       {/* Posted + applicants */}
-      <div className="mt-2 flex items-center gap-2 text-sm text-slate-400">
+      <div className="mt-2 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
         <span>Posted {job.posted}</span>
         <span>·</span>
         <span className="flex items-center gap-1">
@@ -77,18 +79,22 @@ const JobDetail = ({ job }: { job: Job }) => {
       </div>
 
       {/* Apply button */}
-      {job.applicationLink ? (
-<a
-        href={job.applicationLink || "#"}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-5 inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition"
-      >
-        Apply Now <ExternalLink size={14} />
-      </a>
-      ) : (
-        <p className="mt-5 text-sm text-slate-500 dark:text-slate-400">
-          Application details were not provided for this job.
+      <ApplyContacts job={job} />
+
+      {job.source?.kind === "telegram" && telegramChannel && (
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+          {telegramUrl ? (
+            <a
+              href={telegramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-blue-600 dark:hover:text-blue-400 underline-offset-2 hover:underline"
+            >
+              Found on Telegram: @{telegramChannel}
+            </a>
+          ) : (
+            <>Found on Telegram: @{telegramChannel}</>
+          )}
         </p>
       )}
 
@@ -122,7 +128,7 @@ const JobDetail = ({ job }: { job: Job }) => {
                   <Calendar size={16} className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Date Posted</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Date Posted</p>
                   <p className="text-sm font-medium dark:text-slate-200">{job.datePosted}</p>
                 </div>
               </div>
@@ -131,7 +137,7 @@ const JobDetail = ({ job }: { job: Job }) => {
                   <MapPin size={16} className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Location</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Location</p>
                   <p className="text-sm font-medium dark:text-slate-200">{job.location ?? "Location not specified"}</p>
                 </div>
               </div>
@@ -140,7 +146,7 @@ const JobDetail = ({ job }: { job: Job }) => {
                   <Users size={16} className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Experience</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Experience</p>
                   <p className="text-sm font-medium dark:text-slate-200">{job.experience}</p>
                 </div>
               </div>
@@ -149,7 +155,7 @@ const JobDetail = ({ job }: { job: Job }) => {
                   <Briefcase size={16} className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Employment Type</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Employment Type</p>
                   <p className="text-sm font-medium dark:text-slate-200">{job.type ?? "Job type not specified"}</p>
                 </div>
               </div>
@@ -158,7 +164,7 @@ const JobDetail = ({ job }: { job: Job }) => {
                   <Building2 size={16} className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Industry</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Industry</p>
                   <p className="text-sm font-medium dark:text-slate-200">{job.industry}</p>
                 </div>
               </div>
@@ -167,7 +173,7 @@ const JobDetail = ({ job }: { job: Job }) => {
                   <GraduationCap size={16} className="text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">Qualification</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Qualification</p>
                   <p className="text-sm font-medium dark:text-slate-200">{job.qualification}</p>
                 </div>
               </div>
@@ -201,7 +207,7 @@ const JobDetail = ({ job }: { job: Job }) => {
       )}
 
       {activeTab !== "Overview" && (
-        <p className="mt-8 text-sm text-slate-400 italic">Content coming soon.</p>
+        <p className="mt-8 text-sm italic text-slate-500 dark:text-slate-400">Content coming soon.</p>
       )}
     </div>
   );
