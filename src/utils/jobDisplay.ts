@@ -85,3 +85,36 @@ export const safeWhatsAppHref = (value?: string | null): string | null => {
   const phone = normalizePhone(value);
   return phone && phone.startsWith("+") ? `https://wa.me/${phone.slice(1)}` : null;
 };
+
+// ---------------------------------------------------------------------------
+// Logo domain. Jobs ingested from Telegram often have no company or domain, but
+// an apply link on the employer's own site still points at the right favicon.
+// Links through shared services (job boards, ATS vendors, form builders, social
+// sites, URL shorteners, mail providers) say nothing about the employer, so
+// they are never used.
+// ---------------------------------------------------------------------------
+
+const SHARED_HOSTS = [
+  "t.me", "telegram.me", "telegram.org", "wa.me", "whatsapp.com", "linkedin.com", "lnkd.in",
+  "indeed.com", "jobberman.com", "myjobmag.com", "glassdoor.com", "ziprecruiter.com",
+  "google.com", "forms.gle", "goo.gl", "bit.ly", "tinyurl.com", "ow.ly", "t.co", "rebrand.ly",
+  "facebook.com", "fb.me", "instagram.com", "twitter.com", "x.com", "tiktok.com", "youtube.com",
+  "workable.com", "greenhouse.io", "lever.co", "smartrecruiters.com", "ashbyhq.com",
+  "breezy.hr", "recruitee.com", "bamboohr.com", "jobvite.com", "myworkdayjobs.com",
+  "typeform.com", "airtable.com", "notion.so", "notion.site", "linktr.ee", "docs.google.com",
+  "forms.office.com", "microsoft.com", "jotform.com", "tally.so", "wellfound.com",
+  "gmail.com", "yahoo.com", "outlook.com", "hotmail.com",
+];
+
+export const jobLogoDomain = (job: Pick<Job, "domain" | "applicationLink">): string | undefined => {
+  const given = job.domain?.trim();
+  if (given) return given;
+
+  const href = safeHttpUrl(job.applicationLink);
+  if (!href) return undefined;
+
+  const host = new URL(href).hostname.toLowerCase().replace(/^www\./, "");
+  if (!host.includes(".")) return undefined;
+  const shared = SHARED_HOSTS.some((blocked) => host === blocked || host.endsWith(`.${blocked}`));
+  return shared ? undefined : host;
+};
