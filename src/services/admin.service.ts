@@ -10,6 +10,8 @@ import type {
   ChannelResponse,
   ChannelsListResponse,
   CreateChannelPayload,
+  RestoreJobPayload,
+  RestoreJobResponse,
   UpdateChannelPayload,
 } from "../types/admin-type";
 
@@ -135,6 +137,19 @@ export const adminService = {
         data: reason ? { reason } : {},
       },
       "Unable to reject this job."
+    );
+  },
+
+  /** Superadmin only: moves a rejected or published job back to pending review. */
+  restoreJob: async (id: string, payload: RestoreJobPayload = {}) => {
+    assertJobId(id);
+    return request<RestoreJobResponse>(
+      {
+        method: "POST",
+        url: `/api/admin/jobs/${id}/restore`,
+        data: payload.expectedUpdatedAt ? { expectedUpdatedAt: payload.expectedUpdatedAt } : {},
+      },
+      "Unable to move this job back to pending."
     );
   },
 
