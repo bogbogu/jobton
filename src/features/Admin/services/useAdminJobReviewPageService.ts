@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 import { AdminApiError, adminService } from "../../../services/admin.service";
 import type {
   AdminJob,
@@ -7,6 +8,8 @@ import type {
   JobBadge,
   RawPost,
 } from "../../../types/admin-type";
+import { isSuperAdmin } from "../../../utils/roles";
+import { DOMAIN_FORMAT_ERROR, normalizeDomain } from "../utils/domain";
 import { humanizeFields } from "../utils/fieldLabels";
 import { isValidEmailShape, normalizePhone, safeHttpUrl } from "../utils/safeLinks";
 
@@ -15,6 +18,7 @@ export const FORM_FIELDS = [
   "company",
   "location",
   "category",
+  "domain",
   "employmentType",
   "workArrangement",
   "salaryMin",
@@ -23,6 +27,9 @@ export const FORM_FIELDS = [
   "salaryPeriod",
   "skills",
   "description",
+  "aboutCompany",
+  "requirements",
+  "benefits",
   "applicationLink",
   "applyEmail",
   "applyPhone",
@@ -41,6 +48,11 @@ const SALARY_FORMAT_ERROR = "Use whole numbers only, e.g. 150000 (commas are fin
 const SALARY_ORDER_ERROR = "The maximum salary must be at least the minimum.";
 const REQUIRED_ERROR = "Required to publish.";
 
+export const MAX_ABOUT_COMPANY_LENGTH = 2000;
+export const MAX_LIST_ITEMS = 20;
+export const MAX_LIST_ITEM_LENGTH = 500;
+const LIST_FIELDS = ["requirements", "benefits"] as const;
+
 /** DOM id of a form control, so errors can focus and scroll to the right one. */
 export const fieldDomId = (field: FormField) => `review-field-${field}`;
 
@@ -49,11 +61,23 @@ const isFormField = (value: string): value is FormField => (FORM_FIELDS as reado
 const numberToString = (value: number | null | undefined) =>
   typeof value === "number" && Number.isFinite(value) ? String(value) : "";
 
+/** One item per line in the textarea. */
+const linesFromList = (items?: string[] | null) =>
+  Array.isArray(items) ? items.filter((item) => typeof item === "string").join("\n") : "";
+
+/** Trims every line and drops blank ones. */
+export const parseLines = (value: string): string[] =>
+  value
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
 export const toFormValues = (job: AdminJob): FormValues => ({
   title: job.title ?? "",
   company: job.company ?? "",
   location: job.location ?? "",
   category: job.category ?? "",
+  domain: job.domain ?? "",
   employmentType: job.employmentType ?? "",
   workArrangement: job.workArrangement ?? "",
   salaryMin: numberToString(job.salaryMin),
@@ -62,6 +86,9 @@ export const toFormValues = (job: AdminJob): FormValues => ({
   salaryPeriod: job.salaryPeriod ?? "",
   skills: (job.skills ?? []).join(", "),
   description: job.description ?? "",
+  aboutCompany: job.aboutCompany ?? "",
+  requirements: linesFromList(job.requirements),
+  benefits: linesFromList(job.benefits),
   applicationLink: job.applicationLink ?? "",
   applyEmail: job.applyEmail ?? "",
   applyPhone: job.applyPhone ?? "",
@@ -99,15 +126,23 @@ const TEXT_FIELDS: FormField[] = [
   "company",
   "location",
   "category",
+  "domain",
   "description",
+  "aboutCompany",
   "applicationLink",
   "applyEmail",
   "applyPhone",
 ];
 const NULLABLE_ENUM_FIELDS: FormField[] = ["employmentType", "workArrangement", "salaryPeriod"];
 
-const normalizeText = (field: FormField, value: string) =>
-  field === "applyPhone" ? (normalizePhone(value) ?? value.trim()) : value.trim();
+const normalizeText = (field: FormField, value: string) => {
+  if (field === "applyPhone") return normalizePhone(value) ?? value.trim();
+  if (field === "domain") {
+    const parsed = normalizeDomain(value);
+    return parsed.ok ? parsed.value : value.trim();
+  }
+  return value.trim();
+};
 
 /** Only the fields that differ from what the admin loaded. Call only after validation passed. */
 export const buildEdits = (initial: FormValues, current: FormValues): AdminJobEdits => {
@@ -134,6 +169,12 @@ export const buildEdits = (initial: FormValues, current: FormValues): AdminJobEd
   const currentSkills = parseSkills(current.skills);
   if (initialSkills.join("\u0000") !== currentSkills.join("\u0000")) edits.skills = currentSkills;
 
+  for (const field of LIST_FIELDS) {
+    const before = parseLines(initial[field]);
+    const after = parseLines(current[field]);
+    if (before.join("\u0000") !== after.join("\u0000")) edits[field] = after;
+  }
+
   return edits as AdminJobEdits;
 };
 
@@ -143,9 +184,26 @@ interface LocalCheck {
   applyContactMissing: boolean;
 }
 
+/** At most 20 items of 500 characters each (blank lines are ignored). */
+const validateList = (value: string): string | null => {
+  const lines = value.split(/\r?\n/);
+  const items = lines.map((line) => line.trim()).filter(Boolean);
+  if (items.length > MAX_LIST_ITEMS) return `Use at most ${MAX_LIST_ITEMS} items, one per line.`;
+  const tooLong = lines.findIndex((line) => line.trim().length > MAX_LIST_ITEM_LENGTH);
+  if (tooLong !== -1) {
+    return `Each item must be ${MAX_LIST_ITEM_LENGTH} characters or fewer (line ${tooLong + 1} is too long).`;
+  }
+  return null;
+};
+
 /** Client-side checks that mirror the backend rules, for fast feedback only. */
-const validateLocally = (values: FormValues): LocalCheck => {
+const validateLocally = (values: FormValues, initial: FormValues): LocalCheck => {
   const errors: FieldErrors = {};
+
+  // An unchanged legacy value is never sent, so it must not block approving.
+  if (values.domain !== initial.domain && !normalizeDomain(values.domain).ok) {
+    errors.domain = DOMAIN_FORMAT_ERROR;
+  }
 
   for (const field of REQUIRED_TO_PUBLISH) {
     if (!values[field].trim()) errors[field] = REQUIRED_ERROR;
@@ -157,6 +215,15 @@ const validateLocally = (values: FormValues): LocalCheck => {
   if (!max.ok) errors.salaryMax = SALARY_FORMAT_ERROR;
   if (min.ok && max.ok && min.value !== null && max.value !== null && min.value > max.value) {
     errors.salaryMax = SALARY_ORDER_ERROR;
+  }
+
+  if (values.aboutCompany.trim().length > MAX_ABOUT_COMPANY_LENGTH) {
+    errors.aboutCompany = `Must be ${MAX_ABOUT_COMPANY_LENGTH} characters or fewer.`;
+  }
+
+  for (const field of LIST_FIELDS) {
+    const error = validateList(values[field]);
+    if (error) errors[field] = error;
   }
 
   const link = values.applicationLink.trim();
@@ -284,6 +351,7 @@ const prefersReducedMotion = () =>
 
 export const useAdminJobReviewPageService = () => {
   const { id = "" } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const arrivalNotice = readNotice(location.state);
@@ -305,6 +373,9 @@ export const useAdminJobReviewPageService = () => {
 
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectError, setRejectError] = useState<string | null>(null);
+
+  const [showRestoreModal, setShowRestoreModal] = useState(false);
+  const [restoreError, setRestoreError] = useState<string | null>(null);
 
   // Focus + scroll to the first problem field once the form is enabled again.
   const pendingFocus = useRef<FormField | null>(null);
@@ -399,6 +470,9 @@ export const useAdminJobReviewPageService = () => {
   };
 
   const isPending = job?.reviewStatus === "pending_review";
+  /** Rejected or published: the only states that can be moved back to pending. */
+  const isRestorable = job?.reviewStatus === "rejected" || job?.reviewStatus === "published";
+  const canRestore = isRestorable && isSuperAdmin(user);
 
   // Warn before closing the tab or reloading with unsaved edits. (BrowserRouter has
   // no in-app navigation blocker, so this only covers leaving the site.)
@@ -474,7 +548,7 @@ export const useAdminJobReviewPageService = () => {
     if (!job || !values || !initialValues || isSubmitting) return;
 
     // Check everything we can before bothering the server.
-    const check = validateLocally(values);
+    const check = validateLocally(values, initialValues);
     const problemFields = Object.keys(check.errors);
     if (problemFields.length > 0 || check.applyContactMissing) {
       const missing = problemFields.filter((field) => check.errors[field as FormField] === REQUIRED_ERROR);
@@ -572,6 +646,61 @@ export const useAdminJobReviewPageService = () => {
     }
   };
 
+  const openRestoreModal = () => {
+    setRestoreError(null);
+    setShowRestoreModal(true);
+  };
+
+  const closeRestoreModal = useCallback(() => {
+    if (!isSubmitting) setShowRestoreModal(false);
+  }, [isSubmitting]);
+
+  const confirmRestore = async () => {
+    if (!job || !canRestore || isSubmitting) return;
+
+    const wasPublished = job.reviewStatus === "published";
+    setIsSubmitting(true);
+    setRestoreError(null);
+
+    try {
+      await adminService.restoreJob(job.id, { expectedUpdatedAt: job.updatedAt });
+      setShowRestoreModal(false);
+      reload();
+      setLocalNotice({
+        id: job.id,
+        text: wasPublished
+          ? "Job moved back to pending. It is no longer on the public site until it is approved again."
+          : "Job moved back to pending review.",
+      });
+    } catch (err) {
+      if (!(err instanceof AdminApiError)) {
+        setRestoreError("Something went wrong. Please try again.");
+      } else if (err.status === 403) {
+        setRestoreError("Only a superadmin can move a job back to pending.");
+      } else if (err.status === 404) {
+        setRestoreError("This job was not found. It may have been removed.");
+      } else if (err.status === 409 && err.code === "NOT_RESTORABLE") {
+        setShowRestoreModal(false);
+        reload();
+        setLocalNotice({
+          id: job.id,
+          text: "This job is already waiting for review, so there was nothing to move. It has been reloaded.",
+        });
+      } else if (err.status === 409 && err.code === "STALE") {
+        setShowRestoreModal(false);
+        reload();
+        setLocalNotice({
+          id: job.id,
+          text: "This job changed after you opened it. It has been reloaded; please check it and try again.",
+        });
+      } else {
+        setRestoreError(err.message);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return {
     job,
     rawPost,
@@ -581,6 +710,8 @@ export const useAdminJobReviewPageService = () => {
     loadError,
     isSubmitting,
     isPending,
+    isRestorable,
+    canRestore,
     formError,
     postApproveError,
     backToQueuePath,
@@ -591,12 +722,17 @@ export const useAdminJobReviewPageService = () => {
     emptyRequired,
     showRejectModal,
     rejectError,
+    showRestoreModal,
+    restoreError,
     setField,
     toggleBadge,
     approve,
     openRejectModal,
     closeRejectModal,
     confirmReject,
+    openRestoreModal,
+    closeRestoreModal,
+    confirmRestore,
     reload,
   };
 };

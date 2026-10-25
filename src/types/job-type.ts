@@ -21,6 +21,9 @@ export interface Job {
   qualification: string;
   description: string;
   responsibilities: string[];
+  aboutCompany?: string | null;
+  requirements?: string[] | null;
+  benefits?: string[] | null;
   applicationLink?: string | null;
   applyEmail?: string | null;
   applyPhone?: string | null;

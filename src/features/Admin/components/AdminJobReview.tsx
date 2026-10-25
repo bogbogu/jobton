@@ -1,5 +1,6 @@
-import type { KeyboardEvent, ReactNode } from "react";
+import { useEffect, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
+import CompanyLogo from "../../../components/CompanyLogo";
 import {
   EMPLOYMENT_TYPES,
   JOB_BADGES,
@@ -12,10 +13,14 @@ import {
 } from "../../../types/admin-type";
 import {
   fieldDomId,
+  MAX_ABOUT_COMPANY_LENGTH,
+  MAX_LIST_ITEM_LENGTH,
+  MAX_LIST_ITEMS,
   PHONE_FORMAT_ERROR,
   useAdminJobReviewPageService,
   type FormField,
 } from "../services/useAdminJobReviewPageService";
+import { normalizeDomain } from "../utils/domain";
 import { humanizeField } from "../utils/fieldLabels";
 import { formatDateTime, normalizePhone, safeHttpUrl } from "../utils/safeLinks";
 import {
@@ -31,6 +36,7 @@ import {
   secondaryButton,
   Spinner,
 } from "./AdminUi";
+import ConfirmActionModal from "./ConfirmActionModal";
 import ConfirmReasonModal from "./ConfirmReasonModal";
 import ExternalLink from "./ExternalLink";
 
@@ -107,6 +113,32 @@ const Field = ({ name, label, error, highlight, required, hint, children }: Fiel
           Required to publish.
         </p>
       )}
+    </div>
+  );
+};
+
+const LOGO_PREVIEW_DELAY_MS = 400;
+
+/**
+ * Live logo preview for the company website field. The typed value is debounced so a
+ * request is not fired per keystroke, and an empty or invalid value makes no request
+ * (the logo component falls back to the letter avatar). Remounted per domain so the
+ * image is fetched again when the domain changes.
+ */
+const LogoPreview = ({ value, company }: { value: string; company: string }) => {
+  const [settled, setSettled] = useState(value);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSettled(value), LOGO_PREVIEW_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [value]);
+
+  const parsed = normalizeDomain(settled);
+  const domain = parsed.ok ? parsed.value : "";
+
+  return (
+    <div className="shrink-0" title="Logo preview">
+      <CompanyLogo key={domain} company={company || undefined} domain={domain || undefined} />
     </div>
   );
 };
@@ -268,6 +300,12 @@ const AdminJobReview = () => {
     : normalizedPhone
       ? `Will be published as ${normalizedPhone}`
       : PHONE_FORMAT_ERROR;
+  const domainParse = normalizeDomain(values.domain);
+  const domainHint =
+    "Used to fetch the company logo. If the logo looks wrong, correct it; leave empty for a placeholder." +
+    (domainParse.ok && domainParse.value && domainParse.value !== values.domain.trim()
+      ? ` Will be saved as ${domainParse.value}.`
+      : "");
   const approveNextLabel = review.badges.has("verified") ? "Approve as verified & next" : "Approve & next";
   const otherBadges = JOB_BADGES.filter((badge) => badge !== "verified");
 
@@ -306,8 +344,32 @@ const AdminJobReview = () => {
       {!review.isPending && (
         <NoticeBanner>
           This job is {job.reviewStatus.replace("_", " ")} and can no longer be approved or rejected here.
-          {job.review.rejectionReason ? ` Reason: ${job.review.rejectionReason}` : ""}
+          {job.reviewStatus === "rejected" && job.review.rejectionReason ? ` Reason: ${job.review.rejectionReason}` : ""}
         </NoticeBanner>
+      )}
+
+      {job.review.restoredAt && review.isPending && (
+        <p className="text-xs text-slate-600 dark:text-slate-400">
+          Moved back to pending{job.review.restoredFromStatus ? ` from ${job.review.restoredFromStatus.replace("_", " ")}` : ""} on{" "}
+          {formatDateTime(job.review.restoredAt)}.
+        </p>
+      )}
+
+      {review.canRestore ? (
+        <div>
+          <button
+            type="button"
+            onClick={review.openRestoreModal}
+            disabled={review.isSubmitting}
+            className={`${secondaryButton} w-full sm:w-auto`}
+          >
+            Move back to pending
+          </button>
+        </div>
+      ) : (
+        review.isRestorable && (
+          <p className="text-xs text-slate-600 dark:text-slate-400">Only a superadmin can move this back to pending.</p>
+        )
       )}
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
@@ -375,6 +437,31 @@ const AdminJobReview = () => {
 
             <Field name="category" label="Category" required error={err("category")} highlight={flag("category")}>
               {(p) => <input {...p} type="text" maxLength={100} value={values.category} onChange={(e) => review.setField("category", e.target.value)} />}
+            </Field>
+
+            <Field name="domain" label="Company website" error={err("domain")} hint={domainHint}>
+              {(p) => (
+                <div className="flex items-center gap-3">
+                  <input
+                    {...p}
+                    type="text"
+                    inputMode="url"
+                    autoCapitalize="none"
+                    spellCheck={false}
+                    placeholder="e.g. acme.com"
+                    className={`${p.className} min-w-0 flex-1`}
+                    value={values.domain}
+                    onChange={(e) => review.setField("domain", e.target.value)}
+                    onBlur={() => {
+                      // Tidy a pasted URL into the plain hostname that will be saved.
+                      if (domainParse.ok && domainParse.value !== values.domain) {
+                        review.setField("domain", domainParse.value);
+                      }
+                    }}
+                  />
+                  <LogoPreview value={values.domain} company={values.company.trim()} />
+                </div>
+              )}
             </Field>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -453,6 +540,55 @@ const AdminJobReview = () => {
             <Field name="description" label="Description" required error={err("description")} highlight={flag("description")}>
               {(p) => (
                 <textarea {...p} rows={10} maxLength={10000} value={values.description} onChange={(e) => review.setField("description", e.target.value)} />
+              )}
+            </Field>
+
+            <Field
+              name="aboutCompany"
+              label="About the company"
+              error={err("aboutCompany")}
+              hint={`Optional. Shown on the job page. Up to ${MAX_ABOUT_COMPANY_LENGTH} characters.`}
+            >
+              {(p) => (
+                <textarea
+                  {...p}
+                  rows={5}
+                  maxLength={MAX_ABOUT_COMPANY_LENGTH}
+                  value={values.aboutCompany}
+                  onChange={(e) => review.setField("aboutCompany", e.target.value)}
+                />
+              )}
+            </Field>
+
+            <Field
+              name="requirements"
+              label="Requirements"
+              error={err("requirements")}
+              hint={`Optional. One item per line, up to ${MAX_LIST_ITEMS} items of ${MAX_LIST_ITEM_LENGTH} characters.`}
+            >
+              {(p) => (
+                <textarea
+                  {...p}
+                  rows={6}
+                  value={values.requirements}
+                  onChange={(e) => review.setField("requirements", e.target.value)}
+                />
+              )}
+            </Field>
+
+            <Field
+              name="benefits"
+              label="Benefits"
+              error={err("benefits")}
+              hint={`Optional. One item per line, up to ${MAX_LIST_ITEMS} items of ${MAX_LIST_ITEM_LENGTH} characters.`}
+            >
+              {(p) => (
+                <textarea
+                  {...p}
+                  rows={6}
+                  value={values.benefits}
+                  onChange={(e) => review.setField("benefits", e.target.value)}
+                />
               )}
             </Field>
 
@@ -603,6 +739,24 @@ const AdminJobReview = () => {
           )}
         </form>
       </div>
+
+      {review.showRestoreModal && (
+        <ConfirmActionModal
+          title="Move this job back to pending?"
+          confirmLabel="Move back to pending"
+          isSubmitting={review.isSubmitting}
+          error={review.restoreError}
+          onConfirm={() => void review.confirmRestore()}
+          onCancel={review.closeRestoreModal}
+        >
+          <p>This returns the job to the review queue so it can be reviewed again.</p>
+          {job.reviewStatus === "published" && (
+            <p className="font-medium">
+              The job will be removed from the public site until it is approved again.
+            </p>
+          )}
+        </ConfirmActionModal>
+      )}
 
       {review.showRejectModal && (
         <ConfirmReasonModal

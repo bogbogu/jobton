@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { Sun, Moon, Menu, X } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import { isAdminRole } from "../../utils/roles";
 
 const navLinks = [
   { label: "Home", to: "/" },
@@ -16,7 +17,7 @@ const SHOW_AUTH_NAV = false;
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, isAuthLoading, isAuthenticated, logout } = useAuth();
-  const isAdmin = isAuthenticated && user?.role === "admin";
+  const isAdmin = isAuthenticated && isAdminRole(user);
   const visibleLinks = isAdmin ? [...navLinks, { label: "Admin", to: "/admin" }] : navLinks;
   const [isDark, setIsDark] = useState(
     () => document.documentElement.classList.contains("dark")
