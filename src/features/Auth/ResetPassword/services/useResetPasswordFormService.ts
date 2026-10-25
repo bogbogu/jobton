@@ -49,7 +49,7 @@ export const useResetPasswordFormService = () => {
         password: values.password,
       });
 
-      setSuccessMessage("Password updated. You can now login with your new password.");
+      setSuccessMessage("Password updated. For your security you have been signed out on all devices. Log in again with your new password.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unable to reset password right now.";
       setErrorMessage(message);
