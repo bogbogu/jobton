@@ -142,12 +142,12 @@ const AdminChannels = () => {
                   </div>
                 </div>
 
-                <dl className="grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-                  <div className="flex gap-2">
+                <dl className="flex flex-col gap-x-6 gap-y-1 text-sm sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-2">
                     <dt className="text-slate-600 dark:text-slate-400">Last polled:</dt>
                     <dd className="text-slate-800 dark:text-slate-200">{formatDateTime(channel.lastPolledAt)}</dd>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <dt className="text-slate-600 dark:text-slate-400">Jobs:</dt>
                     <dd className="flex flex-wrap gap-x-4 text-slate-800 dark:text-slate-200">
                       <Link to={`/admin/jobs?channel=${encodeURIComponent(channel.username)}`} className="inline-flex min-h-11 items-center underline underline-offset-2">
