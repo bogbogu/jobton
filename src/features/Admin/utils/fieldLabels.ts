@@ -21,6 +21,9 @@ const FIELD_LABELS: Record<string, string> = {
   experience: "Experience",
   qualification: "Qualification",
   responsibilities: "Responsibilities",
+  aboutCompany: "About the company",
+  requirements: "Requirements",
+  benefits: "Benefits",
   domain: "Company website",
 };
 

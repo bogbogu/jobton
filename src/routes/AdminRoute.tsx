@@ -1,5 +1,6 @@
 import { Link, Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { isAdminRole } from "../utils/roles";
 
 /**
  * UX guard for /admin/*. The backend enforces admin access on every request;
@@ -21,7 +22,7 @@ const AdminRoute = () => {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  if (user?.role !== "admin") {
+  if (!isAdminRole(user)) {
     return (
       <div className="mx-auto max-w-xl px-6 py-20 text-center">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Not authorized</h1>

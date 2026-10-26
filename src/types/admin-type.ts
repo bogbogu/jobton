@@ -46,6 +46,9 @@ export interface AdminJobReview {
   reviewedBy: string | null;
   reviewedAt: string | null;
   rejectionReason: string | null;
+  /** Set when a superadmin moved the job back to pending. */
+  restoredAt: string | null;
+  restoredFromStatus: ReviewStatus | null;
 }
 
 export interface AdminJob {
@@ -54,6 +57,8 @@ export interface AdminJob {
   company: string | null;
   location: string | null;
   category: string | null;
+  /** Company website hostname (e.g. acme.com); '' when none. Used to fetch the logo. */
+  domain?: string | null;
   description: string;
   skills: string[];
   status: string[];
@@ -66,6 +71,9 @@ export interface AdminJob {
   applicationLink: string | null;
   applyEmail: string | null;
   applyPhone: string | null;
+  aboutCompany?: string | null;
+  requirements?: string[] | null;
+  benefits?: string[] | null;
   reviewStatus: ReviewStatus;
   review: AdminJobReview;
   source: AdminJobSource;
@@ -118,6 +126,7 @@ export interface AdminJobEdits {
   company?: string;
   location?: string;
   category?: string;
+  domain?: string;
   employmentType?: string | null;
   workArrangement?: string | null;
   salaryMin?: number | null;
@@ -129,6 +138,9 @@ export interface AdminJobEdits {
   applicationLink?: string;
   applyEmail?: string;
   applyPhone?: string;
+  aboutCompany?: string;
+  requirements?: string[];
+  benefits?: string[];
 }
 
 export interface ApproveJobPayload {
@@ -140,6 +152,16 @@ export interface ApproveJobPayload {
 export interface ApproveJobResponse {
   message: string;
   job: AdminJob;
+}
+
+export interface RestoreJobPayload {
+  expectedUpdatedAt?: string;
+}
+
+/** Handled defensively: the job may be missing from the response. */
+export interface RestoreJobResponse {
+  message?: string;
+  job?: AdminJob;
 }
 
 export type ChannelKind = "board" | "authored";

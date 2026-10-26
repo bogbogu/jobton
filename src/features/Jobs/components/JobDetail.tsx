@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState, type KeyboardEvent } from "react";
 import { Link } from "react-router-dom";
 import {
   MapPin,
@@ -14,10 +14,69 @@ import CompanyLogo from "../../../components/CompanyLogo";
 import ApplyContacts from "../../../components/ApplyContacts";
 import { companyName, companyPageSlug, jobLogoDomain, safeHttpUrl } from "../../../utils/jobDisplay";
 
-const TABS = ["Overview", "About Company", "Requirements", "Benefits"];
+type TabName = "Overview" | "About Company" | "Requirements" | "Benefits";
+
+// Post text is untrusted: keep only non-blank strings and render them as plain text.
+const cleanList = (items?: string[] | null): string[] =>
+  Array.isArray(items)
+    ? items.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+    : [];
+
+const cleanText = (value?: string | null): string => (typeof value === "string" ? value.trim() : "");
+
+const BulletList = ({ items }: { items: string[] }) => (
+  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-600 dark:text-slate-400 marker:text-blue-600">
+    {items.map((item, i) => (
+      <li key={i} className="whitespace-pre-line break-words [overflow-wrap:anywhere]">
+        {item}
+      </li>
+    ))}
+  </ul>
+);
 
 const JobDetail = ({ job }: { job: Job }) => {
-  const [activeTab, setActiveTab] = useState("Overview");
+  const [selectedTab, setSelectedTab] = useState<TabName>("Overview");
+  const tabsId = useId();
+  const aboutCompany = cleanText(job.aboutCompany);
+  const requirements = cleanList(job.requirements);
+  const benefits = cleanList(job.benefits);
+
+  // Overview always shows; the others only when the job has that content.
+  const tabs: TabName[] = [
+    "Overview",
+    ...(aboutCompany ? (["About Company"] as const) : []),
+    ...(requirements.length > 0 ? (["Requirements"] as const) : []),
+    ...(benefits.length > 0 ? (["Benefits"] as const) : []),
+  ];
+  // If the selected tab no longer exists (the job changed), fall back to Overview.
+  const activeTab: TabName = tabs.includes(selectedTab) ? selectedTab : "Overview";
+  const tabDomId = (tab: TabName) => `${tabsId}-tab-${tab.toLowerCase().replace(/\s+/g, "-")}`;
+  const panelDomId = (tab: TabName) => `${tabsId}-panel-${tab.toLowerCase().replace(/\s+/g, "-")}`;
+
+  const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const last = tabs.length - 1;
+    let next: number;
+    switch (event.key) {
+      case "ArrowRight":
+        next = index === last ? 0 : index + 1;
+        break;
+      case "ArrowLeft":
+        next = index === 0 ? last : index - 1;
+        break;
+      case "Home":
+        next = 0;
+        break;
+      case "End":
+        next = last;
+        break;
+      default:
+        return;
+    }
+    event.preventDefault();
+    setSelectedTab(tabs[next]);
+    document.getElementById(tabDomId(tabs[next]))?.focus();
+  };
+
   const telegramChannel = job.source?.channel?.trim().replace(/^@+/, "") ?? "";
   const telegramUrl = safeHttpUrl(job.source?.url);
 
@@ -100,11 +159,18 @@ const JobDetail = ({ job }: { job: Job }) => {
 
       {/* Tabs */}
       <div className="mt-8 border-b border-slate-200 dark:border-slate-700">
-        <div className="flex gap-1 overflow-x-auto overflow-y-hidden scrollbar-none">
-          {TABS.map((tab) => (
+        <div role="tablist" aria-label="Job details" className="flex gap-1 overflow-x-auto overflow-y-hidden scrollbar-none">
+          {tabs.map((tab, index) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab)}
+              type="button"
+              role="tab"
+              id={tabDomId(tab)}
+              aria-selected={activeTab === tab}
+              aria-controls={panelDomId(tab)}
+              tabIndex={activeTab === tab ? 0 : -1}
+              onClick={() => setSelectedTab(tab)}
+              onKeyDown={(event) => handleTabKeyDown(event, index)}
               className={`shrink-0 px-3 pb-3 text-sm font-medium transition border-b-2 -mb-px ${activeTab === tab
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
@@ -118,7 +184,13 @@ const JobDetail = ({ job }: { job: Job }) => {
 
       {/* Overview Tab */}
       {activeTab === "Overview" && (
-        <div className="mt-6 space-y-7 ">
+        <div
+          role="tabpanel"
+          id={panelDomId("Overview")}
+          aria-labelledby={tabDomId("Overview")}
+          tabIndex={0}
+          className="mt-6 space-y-7 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500"
+        >
           {/* Job Overview Grid */}
           <div>
             <h3 className="font-bold text-lg mb-4 dark:text-white">Job Overview</h3>
@@ -206,8 +278,45 @@ const JobDetail = ({ job }: { job: Job }) => {
         </div>
       )}
 
-      {activeTab !== "Overview" && (
-        <p className="mt-8 text-sm italic text-slate-500 dark:text-slate-400">Content coming soon.</p>
+      {activeTab === "About Company" && (
+        <div
+          role="tabpanel"
+          id={panelDomId("About Company")}
+          aria-labelledby={tabDomId("About Company")}
+          tabIndex={0}
+          className="mt-6 space-y-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500"
+        >
+          <h3 className="font-bold text-lg dark:text-white">About {companyName(job)}</h3>
+          <p className="whitespace-pre-line break-words [overflow-wrap:anywhere] text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+            {aboutCompany}
+          </p>
+        </div>
+      )}
+
+      {activeTab === "Requirements" && (
+        <div
+          role="tabpanel"
+          id={panelDomId("Requirements")}
+          aria-labelledby={tabDomId("Requirements")}
+          tabIndex={0}
+          className="mt-6 space-y-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500"
+        >
+          <h3 className="font-bold text-lg dark:text-white">Requirements</h3>
+          <BulletList items={requirements} />
+        </div>
+      )}
+
+      {activeTab === "Benefits" && (
+        <div
+          role="tabpanel"
+          id={panelDomId("Benefits")}
+          aria-labelledby={tabDomId("Benefits")}
+          tabIndex={0}
+          className="mt-6 space-y-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-500"
+        >
+          <h3 className="font-bold text-lg dark:text-white">Benefits</h3>
+          <BulletList items={benefits} />
+        </div>
       )}
     </div>
   );

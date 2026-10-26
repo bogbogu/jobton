@@ -4,7 +4,7 @@ export interface AuthUser {
   firstName?: string;
   lastName?: string;
   email: string;
-  role?: string;
+  role?: "user" | "admin" | "superadmin" | (string & {});
   [key: string]: unknown;
 }
 
