@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./useAuth";
 import { jobsService } from "../services/jobs.service";
+import { setSavedInCache } from "../services/pagedJobsCache";
 
 // Shared by any hook that holds its own list of jobs (useJobs, useCompany,
 // ...) and needs to persist a save/unsave toggle without duplicating the
@@ -22,6 +23,9 @@ export const useSaveJobToggle = () => {
     } else {
       await jobsService.save(jobId);
     }
+
+    // Keep the Find Jobs page's cached pages in step with a save made anywhere.
+    setSavedInCache(jobId, !currentlySaved);
 
     return !currentlySaved;
   };

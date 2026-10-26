@@ -12,7 +12,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import JobCard from "../../../components/ui/JobCard";
 import FilterSelect from "../../../components/ui/FilterSelect";
+import Pagination from "../../../components/ui/Pagination";
+import { Skeleton } from "../../../components/ui/Skeleton";
 import JobDetail from "./JobDetail";
+import { JobListSkeleton, JobDetailSkeleton } from "./JobsSkeletons";
 import { useJobsPageService } from "../services/useJobsPageService";
 import { jobTypeOptions, industryOptions, categoryOptions, sortOptions, reportReasonOptions } from "../../../constants/fieldsKeyValues";
 
@@ -20,9 +23,22 @@ const Jobs = () => {
   const navigate = useNavigate();
 
   const {
-    filteredJobs,
-    isLoading,
+    jobs,
+    page,
+    total,
+    totalPages,
+    rangeStart,
+    rangeEnd,
+    statusMessage,
+    showSkeleton,
+    isPageLoading,
+    isDetailLoading,
     error,
+    retry,
+    handlePageChange,
+    listTopRef,
+    viewedIds,
+    markViewed,
     keyword, setKeyword,
     location, setLocation,
     selectedType, setSelectedType,
@@ -54,7 +70,9 @@ const Jobs = () => {
     reportToast,
   } = useJobsPageService();
 
-  const handleJobCardClick = (job: (typeof filteredJobs)[number]) => {
+  const handleJobCardClick = (job: (typeof jobs)[number]) => {
+    markViewed(job.id);
+
     if (window.innerWidth < 768) {
       navigate(`/jobs/${job.id}`);
       return;
@@ -66,6 +84,10 @@ const Jobs = () => {
   return (
     <section className="py-10 bg-slate-50 dark:bg-slate-900 min-h-screen transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
+        {/* Always mounted so screen readers announce each change after a load. */}
+        <div role="status" aria-live="polite" className="sr-only">
+          {statusMessage}
+        </div>
 
         {/* Search bar */}
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 p-3 flex flex-col md:flex-row gap-2 mb-5">
@@ -206,10 +228,19 @@ const Jobs = () => {
         )}
 
         {/* Results header */}
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Showing 1–{filteredJobs.length} of {filteredJobs.length} results
-          </p>
+        <div ref={listTopRef} className="flex items-center justify-between mb-4 scroll-mt-20">
+          <h2 className="text-sm text-slate-500 dark:text-slate-400">
+            {showSkeleton ? (
+              <>
+                <span className="sr-only">Loading jobs</span>
+                <Skeleton className="h-4 w-28" />
+              </>
+            ) : error ? (
+              "Jobs"
+            ) : (
+              `${total.toLocaleString()} ${total === 1 ? "job" : "jobs"} found`
+            )}
+          </h2>
           <div className="flex items-center gap-4">
             {/* Sort — desktop */}
             <div className="relative hidden md:block">
@@ -241,10 +272,11 @@ const Jobs = () => {
               <div className="flex items-center gap-2 md:gap-3 text-sm relative">
                 <button
                   onClick={handleSave}
+                  disabled={isPageLoading}
                   aria-label={isSelectedJobSaved ? "Saved" : "Save job"}
                   className={`flex items-center gap-1.5 rounded-full px-2.5 py-1.5 md:px-0 md:py-0 transition ${
                     isSelectedJobSaved ? "text-blue-600 font-medium" : "text-slate-400 hover:text-slate-700"
-                  }`}
+                  } disabled:opacity-50 disabled:cursor-wait`}
                 >
                   <Bookmark size={14} className={isSelectedJobSaved ? "fill-blue-600" : ""} />
                   <span className="hidden md:inline">{isSelectedJobSaved ? "Saved" : "Save"}</span>
@@ -276,35 +308,86 @@ const Jobs = () => {
         {/* Split panel */}
         <div className="flex gap-6 items-start">
           {/* Left — job list */}
-          <div className="w-full md:w-5/12 flex flex-col gap-3">
-            {filteredJobs.length === 0 ? (
-              <p className="text-sm text-slate-400 py-16 text-center">
-                {isLoading
-                  ? "Loading jobs..."
-                  : error
-                  ? error
-                  : "No jobs found. Try a different search."}
-              </p>
-            ) : (
-              filteredJobs.map((job) => (
-                <div
-                  key={job.id}
-                  onClick={() => handleJobCardClick(job)}
-                  className={`cursor-pointer rounded-3xl transition ring-2 ${
-                    selectedJob?.id === job.id
-                      ? "ring-blue-500"
-                      : "ring-transparent hover:ring-slate-200"
-                  }`}
-                >
-                  <JobCard job={job} onToggleSave={() => toggleSave(job.id)} />
+          <div className="w-full md:w-5/12 flex flex-col gap-3" aria-busy={showSkeleton || isPageLoading}>
+            {showSkeleton ? (
+              <JobListSkeleton />
+            ) : error ? (
+              <>
+                <div role="alert" className="py-16 text-center">
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{error}</p>
+                  <button
+                    onClick={retry}
+                    className="mt-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition"
+                  >
+                    Try again
+                  </button>
                 </div>
-              ))
+                {/* If one page fails, the others can still be tried. */}
+                <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} className="mt-1" />
+              </>
+            ) : jobs.length === 0 ? (
+              <div className="py-16 text-center">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {isFiltered
+                    ? "No jobs match your search. Try different keywords or clear your filters."
+                    : "There are no jobs to show right now. Please check back soon."}
+                </p>
+                {isFiltered && (
+                  <button
+                    onClick={handleReset}
+                    className="mt-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition"
+                  >
+                    Clear filters
+                  </button>
+                )}
+              </div>
+            ) : (
+              <>
+                {/* While the next page loads the old one stays, dimmed and unclickable. */}
+                <div
+                  inert={isPageLoading}
+                  className={`flex flex-col gap-3 transition-opacity ${isPageLoading ? "opacity-60" : ""}`}
+                >
+                  {jobs.map((job) => (
+                    <div
+                      key={job.id}
+                      onClick={() => handleJobCardClick(job)}
+                      className={`relative cursor-pointer rounded-3xl transition ring-2 focus-within:ring-blue-300 ${
+                        selectedJob?.id === job.id
+                          ? "ring-blue-500"
+                          : "ring-transparent hover:ring-slate-200"
+                      }`}
+                    >
+                      {/* Keyboard way to open the card: a real button beside (not around)
+                          the card's own save/company controls. Its click bubbles up to the
+                          wrapper above, so Enter/Space do exactly what a mouse click does. */}
+                      <button
+                        type="button"
+                        aria-current={selectedJob?.id === job.id ? "true" : undefined}
+                        className="sr-only"
+                      >
+                        View details: {job.title}
+                      </button>
+                      <JobCard job={job} viewed={viewedIds.has(job.id)} onToggleSave={() => toggleSave(job)} />
+                    </div>
+                  ))}
+                </div>
+
+                <p className="text-sm text-slate-500 dark:text-slate-400 text-center mt-2">
+                  Showing {rangeStart.toLocaleString()}–{rangeEnd.toLocaleString()} of {total.toLocaleString()}
+                </p>
+                <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} className="mt-1" />
+              </>
             )}
           </div>
 
           {/* Right — sticky detail, md and above */}
           <div className="hidden md:block md:w-7/12 sticky top-24 self-start">
-            {selectedJob && <JobDetail job={selectedJob} />}
+            {isDetailLoading ? (
+              <JobDetailSkeleton />
+            ) : (
+              selectedJob && <JobDetail job={selectedJob} />
+            )}
           </div>
         </div>
 
