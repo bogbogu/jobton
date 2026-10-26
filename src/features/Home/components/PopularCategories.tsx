@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import PopularCategoriesCard from "../../../components/ui/cards/PopularCategoriesCard";
+import PopularCategoriesCardSkeleton from "../../../components/ui/cards/PopularCategoriesCardSkeleton";
+import SlowLoadNotice from "../../../components/ui/SlowLoadNotice";
 import { useCategories } from "../../../hooks/useCategories";
 import { ArrowRight } from "lucide-react";
 
 const PopularCategories = () => {
-  const { categories, error } = useCategories();
+  const { categories, isLoading, error } = useCategories();
   const popularCategories = categories.slice(0, 6);
 
   return (
@@ -59,16 +61,20 @@ const PopularCategories = () => {
           </p>
         )}
 
-        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-6">
-          {popularCategories.map((category) => (
-            <PopularCategoriesCard
-              key={category.title}
-              icon={category.icon}
-              title={category.title}
-              jobs={category.jobs}
-            />
-          ))}
+        <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-6" aria-busy={isLoading}>
+          {isLoading
+            ? Array.from({ length: 6 }, (_, i) => <PopularCategoriesCardSkeleton key={i} />)
+            : popularCategories.map((category) => (
+                <PopularCategoriesCard
+                  key={category.title}
+                  icon={category.icon}
+                  title={category.title}
+                  jobs={category.jobs}
+                />
+              ))}
         </div>
+        {/* Outside the aria-busy grid so its message is announced. */}
+        {isLoading && <SlowLoadNotice className="mt-6 text-center" />}
       </div>
     </section>
   );

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import JobCard from "../../../components/ui/JobCard";
 import Pagination from "../../../components/ui/Pagination";
 import { Skeleton } from "../../../components/ui/Skeleton";
+import SlowLoadNotice from "../../../components/ui/SlowLoadNotice";
 import JobDetail from "./JobDetail";
 import { JobListSkeleton, JobDetailSkeleton } from "./JobsSkeletons";
 import { useJobsPageService } from "../services/useJobsPageService";
@@ -30,6 +31,7 @@ const Jobs = () => {
     rangeEnd,
     statusMessage,
     showSkeleton,
+    isFirstLoad,
     isPageLoading,
     isDetailLoading,
     error,
@@ -300,6 +302,9 @@ const Jobs = () => {
             )}
           </div>
         </div>
+
+        {/* Outside the aria-busy list so its message is announced. */}
+        {isFirstLoad && <SlowLoadNotice className="mb-4" />}
 
         {/* Split panel */}
         <div className="flex gap-6 items-start">
