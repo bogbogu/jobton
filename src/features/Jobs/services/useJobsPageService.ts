@@ -164,6 +164,12 @@ export const useJobsPageService = () => {
   const showSkeleton = isInitialLoading || isPastLastPage || (isPageLoading && jobs.length === 0);
   const isDetailLoading = showSkeleton || isExtraPending;
 
+  // True only until the first page of results has arrived (not for later page
+  // or filter changes) — the one case where a sleeping API may keep us waiting.
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
+  if (isLoaded && !hasLoadedOnce) setHasLoadedOnce(true);
+  const isFirstLoad = showSkeleton && !hasLoadedOnce && !error;
+
   // A job named by the URL counts as opened (clicking a card marks it too).
   const openedId = selectedJob && selectedJob.id === selectedId ? selectedJob.id : null;
   useEffect(() => {
@@ -314,6 +320,7 @@ export const useJobsPageService = () => {
     rangeEnd,
     statusMessage,
     showSkeleton,
+    isFirstLoad,
     isPageLoading,
     isDetailLoading,
     error,
