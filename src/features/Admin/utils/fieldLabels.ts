@@ -27,6 +27,15 @@ const FIELD_LABELS: Record<string, string> = {
   domain: "Company website",
 };
 
+/** Plain-word text for automatic warning codes. Unknown warnings are shown as they are. */
+const WARNING_LABELS: Record<string, string> = {
+  from_image: "Read from an image. Check names, numbers and links against the picture.",
+  contact_from_image: "Contact details come from an image. Check them against the picture.",
+};
+
+export const humanizeWarning = (warning: string): string =>
+  Object.prototype.hasOwnProperty.call(WARNING_LABELS, warning) ? WARNING_LABELS[warning] : warning;
+
 /** "salaryMin" -> "Salary"; unknown keys become spaced, capitalized words. */
 export const humanizeField = (key: string): string => {
   const known = FIELD_LABELS[key];
