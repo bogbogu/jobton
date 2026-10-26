@@ -23,7 +23,8 @@ export const contactChannels = [
   {
     icon: Handshake,
     title: "Partnerships",
-    description: "partnerships@jobton.com.ng",
-    href: "mailto:partnerships@jobton.com.ng",
+    description: "info@jobton.com.ng",
+    subDescription: 'Use the subject "Partnership inquiry"',
+    href: "mailto:info@jobton.com.ng?subject=Partnership%20inquiry",
   },
 ];
