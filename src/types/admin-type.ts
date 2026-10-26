@@ -32,6 +32,10 @@ export interface AdminJobExtraction {
   missing?: string[];
   droppedFields?: string[];
   post?: string | null;
+  /** True when part of the job was read from an image. Missing on older jobs. */
+  fromImage?: boolean;
+  /** Plain text the model read from the image(s), up to 4000 characters. Empty or missing when none. */
+  imageText?: string;
 }
 
 export interface AdminJobSource {
@@ -40,6 +44,8 @@ export interface AdminJobSource {
   messageId: number | null;
   url: string | null;
   postedAt: string | null;
+  /** Telegram CDN image URLs from the original post (0 to 3). Missing on older responses. */
+  imageUrls?: string[];
 }
 
 export interface AdminJobReview {

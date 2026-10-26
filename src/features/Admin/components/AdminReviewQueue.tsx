@@ -195,6 +195,7 @@ const AdminReviewQueue = () => {
 
                   <div className="flex flex-wrap items-center gap-1.5">
                     <LinkClassBadge linkClass={job.extraction.linkClass} />
+                    {job.extraction.fromImage === true && <Chip tone="blue">Image</Chip>}
                     {redFlags.length > 0 && (
                       <Chip tone="red">
                         {redFlags.length} warning{redFlags.length === 1 ? "" : "s"}

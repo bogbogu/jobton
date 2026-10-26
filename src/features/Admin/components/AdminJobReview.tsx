@@ -21,8 +21,9 @@ import {
   type FormField,
 } from "../services/useAdminJobReviewPageService";
 import { normalizeDomain } from "../utils/domain";
-import { humanizeField } from "../utils/fieldLabels";
+import { humanizeField, humanizeWarning } from "../utils/fieldLabels";
 import { formatDateTime, normalizePhone, safeHttpUrl } from "../utils/safeLinks";
+import { telegramImageUrls } from "../utils/telegramImages";
 import {
   cardClasses,
   Chip,
@@ -188,8 +189,98 @@ const ModelNotes = ({ notes }: { notes?: string[] }) => {
   );
 };
 
+const IMAGE_ERROR_TEXT = "Image could not be loaded. Open the original post to see it.";
+
+/** One Telegram post image. Falls back to a muted line if it fails to load. */
+const PostImage = ({
+  src,
+  index,
+  total,
+  sourceUrl,
+}: {
+  src: string;
+  index: number;
+  total: number;
+  sourceUrl: string | null;
+}) => {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return (
+      <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600 dark:bg-slate-950 dark:text-slate-400">
+        {IMAGE_ERROR_TEXT}
+        {sourceUrl && (
+          <>
+            {" "}
+            <ExternalLink href={sourceUrl}>Open on Telegram</ExternalLink>
+          </>
+        )}
+      </p>
+    );
+  }
+
+  return (
+    <figure className="min-w-0 space-y-1">
+      <a
+        href={src}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block max-w-full rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+      >
+        <img
+          src={src}
+          alt={`Image from the original Telegram post, ${index + 1} of ${total}`}
+          loading="lazy"
+          decoding="async"
+          referrerPolicy="no-referrer"
+          onError={() => setFailed(true)}
+          className="block max-h-[480px] max-w-full rounded-lg border border-slate-200 object-contain dark:border-slate-700"
+        />
+      </a>
+      <figcaption className="text-xs text-slate-600 dark:text-slate-400">
+        Original image
+        <span className="sr-only"> (opens the full image in a new tab)</span>
+      </figcaption>
+    </figure>
+  );
+};
+
+const PostImages = ({ urls, sourceUrl }: { urls: string[]; sourceUrl: string | null }) => {
+  if (urls.length === 0) return null;
+  return (
+    <div className="min-w-0 space-y-3">
+      {urls.map((url, index) => (
+        <PostImage key={url} src={url} index={index} total={urls.length} sourceUrl={sourceUrl} />
+      ))}
+    </div>
+  );
+};
+
+/** What the system read from the image(s), collapsed by default. Rendered as plain text only. */
+const ImageTextDetails = ({ text }: { text: string }) => (
+  <details className="min-w-0 rounded-lg border border-slate-200 dark:border-slate-700">
+    <summary className="min-h-11 cursor-pointer px-3 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:text-slate-100">
+      Text the system read from the image
+    </summary>
+    <div className="min-w-0 space-y-2 px-3 pb-3">
+      <p className="text-xs text-slate-600 dark:text-slate-400">
+        Compare this with the picture. Differences or text you cannot see in the picture are a warning sign.
+      </p>
+      <pre className="max-h-80 overflow-y-auto whitespace-pre-wrap break-words [overflow-wrap:anywhere] rounded-lg bg-slate-50 p-3 font-sans text-sm text-slate-800 dark:bg-slate-950 dark:text-slate-200">
+        {text}
+      </pre>
+    </div>
+  </details>
+);
+
 const RawPostPanel = ({ job, rawPost }: { job: AdminJob; rawPost: RawPost | null }) => {
   const sourceUrl = safeHttpUrl(job.source.url);
+  const imageUrls = telegramImageUrls(job.source.imageUrls);
+  const imageText =
+    job.extraction.fromImage === true && typeof job.extraction.imageText === "string"
+      ? job.extraction.imageText
+      : "";
+  const imageTextSection = imageText.trim() ? <ImageTextDetails text={imageText} /> : null;
 
   return (
     <section aria-labelledby="raw-post-heading" className={`${cardClasses} space-y-3`}>
@@ -215,11 +306,17 @@ const RawPostPanel = ({ job, rawPost }: { job: AdminJob; rawPost: RawPost | null
             {rawPost.text}
           </pre>
 
-          {rawPost.hasImage && (
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              This post also contains an image. Open it on Telegram to see it.
-            </p>
+          {imageUrls.length > 0 ? (
+            <PostImages urls={imageUrls} sourceUrl={sourceUrl} />
+          ) : (
+            rawPost.hasImage && (
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                This post also contains an image. Open it on Telegram to see it.
+              </p>
+            )
           )}
+
+          {imageTextSection}
 
           <div>
             <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">Links in the post</h3>
@@ -247,9 +344,13 @@ const RawPostPanel = ({ job, rawPost }: { job: AdminJob; rawPost: RawPost | null
           </div>
         </>
       ) : (
-        <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600 dark:bg-slate-950 dark:text-slate-300">
-          The original post is not available (it may have been purged after 90 days).
-        </p>
+        <>
+          <p className="rounded-lg bg-slate-50 p-3 text-sm text-slate-600 dark:bg-slate-950 dark:text-slate-300">
+            The original post is not available (it may have been purged after 90 days).
+          </p>
+          <PostImages urls={imageUrls} sourceUrl={sourceUrl} />
+          {imageTextSection}
+        </>
       )}
     </section>
   );
@@ -384,7 +485,7 @@ const AdminJobReview = () => {
               <LinkClassBadge linkClass={extraction.linkClass} />
             </div>
 
-            <StringList title="Automatic warnings" items={extraction.redFlags} tone="red" />
+            <StringList title="Automatic warnings" items={extraction.redFlags} tone="red" format={humanizeWarning} />
             <StringList title="Still missing" items={extraction.missing} tone="amber" format={humanizeField} />
             <StringList
               title="Values the AI had to interpret - double-check"
@@ -420,6 +521,13 @@ const AdminJobReview = () => {
           <h2 id="edit-heading" className="text-lg font-bold text-slate-900 dark:text-white">
             Extracted fields
           </h2>
+
+          {extraction.fromImage === true && (
+            <NoticeBanner role="note">
+              Part of this job was read from an image. Check names, phone numbers, emails and links against the picture
+              before approving.
+            </NoticeBanner>
+          )}
 
           <fieldset disabled={disabled} className="min-w-0 space-y-4 pb-2">
             <Field name="title" label="Title" required error={err("title")} highlight={flag("title")}>
