@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MapPin, BriefcaseBusiness, Bookmark} from "lucide-react";
+import { MapPin, BriefcaseBusiness, Bookmark, Eye } from "lucide-react";
 // import { ThumbsDown } from "lucide-react";
 import CompanyLogo from "../CompanyLogo";
 import { companyName, companyPageSlug, jobLogoDomain } from "../../utils/jobDisplay";
@@ -16,11 +16,14 @@ const JobCard = ({
   onClick,
   onToggleSave,
   className,
+  viewed = false,
 }: {
   job: any;
   onClick?: () => void;
   onToggleSave?: () => void;
   className?: string;
+  // The visitor has already opened this job (shown muted, with a label).
+  viewed?: boolean;
 }) => {
   const saved = job.saved ?? false;
   // const [reported, setReported] = useState(false);
@@ -36,7 +39,9 @@ const JobCard = ({
           />
 
           <div>
-            <p className="font-bold text-base dark:text-white">{job.title}</p>
+            <p className={`font-bold text-base ${viewed ? "text-slate-500 dark:text-slate-400" : "dark:text-white"}`}>
+              {job.title}
+            </p>
             {companyPageSlug(job) ? (
               <Link
                 to={`/companies/${companyPageSlug(job)}`}
@@ -116,7 +121,15 @@ const JobCard = ({
         ))}
       </div>
 
-      <p className="mt-6 text-sm text-slate-500 dark:text-slate-400">Posted {job.posted}</p>
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <p>Posted {job.posted}</p>
+        {viewed && (
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium">
+            <Eye size={14} aria-hidden="true" />
+            Viewed
+          </span>
+        )}
+      </div>
     </div>
   );
 };
